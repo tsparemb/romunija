@@ -5,8 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>North Romania 2026</title>
 <link href="./index_files/css2" rel="stylesheet">
-<link rel="stylesheet" href="file:///C:/Users/Tine/Downloads/leaflet.css">
-<script src="file:///C:/Users/Tine/Downloads/leaflet.js"></script>
 <style>
 :root{
   --bg:#f9f9fb;--surface:#ffffff;--card:#ffffff;--border:#dcdde8;
@@ -145,12 +143,7 @@ td strong{color:var(--text);}
     <div class="sb-head">Overview</div>
     <div class="sb-item active" onclick="show(&#39;overview&#39;)"><span class="sb-day">Bases &amp; Bookings</span></div>
     <div class="sb-item" onclick="show(&#39;driving&#39;)"><span class="sb-day">Driving Summary</span></div>
-    <div class="sb-item" onclick="showMap(&#39;all&#39;)"><span class="sb-day">🗺 Map — All</span></div>
-    <div class="sb-item" onclick="showMap(&#39;sibiu&#39;)"><span class="sb-day">🗺 Sibiu region</span></div>
-    <div class="sb-item" onclick="showMap(&#39;brasov&#39;)"><span class="sb-day">🗺 Brașov region</span></div>
-    <div class="sb-item" onclick="showMap(&#39;bucovina&#39;)"><span class="sb-day">🗺 Bucovina</span></div>
-    <div class="sb-item" onclick="showMap(&#39;maramures&#39;)"><span class="sb-day">🗺 Maramureș</span></div>
-    <div class="sb-item" onclick="showMap(&#39;cluj&#39;)"><span class="sb-day">🗺 Cluj region</span></div>
+    <div class="sb-item" onclick="showPanel(&#39;mapPanel&#39;, this)"><span class="sb-day">🗺 Map</span></div>
   </div>
   <div class="sb-section">
     <div class="sb-head">Transit In</div>
@@ -207,21 +200,8 @@ td strong{color:var(--text);}
 
 <!-- MAP -->
 <div class="map-panel" id="mapPanel">
-  <div style="display:flex;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;overflow-x:auto;scrollbar-width:none;">
-    <div class="map-tab active" onclick="showMap(&#39;all&#39;)">All</div>
-    <div class="map-tab" onclick="showMap(&#39;sibiu&#39;)">Sibiu</div>
-    <div class="map-tab" onclick="showMap(&#39;brasov&#39;)">Brașov</div>
-    <div class="map-tab" onclick="showMap(&#39;bucovina&#39;)">Bucovina</div>
-    <div class="map-tab" onclick="showMap(&#39;maramures&#39;)">Maramureș</div>
-    <div class="map-tab" onclick="showMap(&#39;cluj&#39;)">Cluj</div>
-  </div>
-  <div id="map" style="flex:1;min-height:400px;z-index:1;position:relative;">
-    <div style="position:absolute;bottom:28px;right:10px;z-index:1000;background:rgba(255,255,255,0.95);border:1px solid #dcdde8;padding:10px 14px;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
-      <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#585870;margin-bottom:5px;"><div style="width:10px;height:10px;border-radius:50%;background:#002B7F;flex-shrink:0;"></div>Base / hotel</div>
-      <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#585870;margin-bottom:5px;"><div style="width:10px;height:10px;border-radius:50%;background:#CE1126;flex-shrink:0;"></div>Key sight</div>
-      <div style="display:flex;align-items:center;gap:8px;font-size:11px;color:#585870;"><div style="width:10px;height:10px;border-radius:50%;background:#b8960a;flex-shrink:0;"></div>Hike trailhead</div>
-    </div>
-  </div>
+  <iframe src="./index_files/embed.html" style="flex:1;width:100%;border:none;min-height:500px;" allowfullscreen="" loading="lazy">
+  </iframe>
 </div>
 
 <!-- OVERVIEW -->
@@ -660,139 +640,11 @@ td strong{color:var(--text);}
 </div><!-- layout -->
 
 <script>
-const BASES=[
-  {lat:45.7579,lng:21.2561,name:'① Boheme Studio',sub:'Timișoara · 11–12 Jul',desc:'Check-in 14:00–23:30 · Check-out by 11:00 · +40 742 106 932'},
-  {lat:45.7654,lng:24.1467,name:'② Julia's Residence',sub:'Cisnădie/Sibiu · 12–17 Jul',desc:'Check-in 15:00–00:00 · Check-out 08:00–10:00 · +40 749 265 299'},
-  {lat:45.6619,lng:25.5826,name:'③ AlbertView',sub:'Brașov · 17–23 Jul',desc:'Check-in 24h flexible · +40 721 555 451'},
-  {lat:47.5542,lng:25.9018,name:'④ Piano Apartament',sub:'Gura Humorului · 23–27 Jul',desc:'Check-in 15:00–22:00 · Check-out 08:00–11:00 · +40 745 001 298'},
-  {lat:47.9268,lng:23.8751,name:'⑤ Boulevard Apartament',sub:'Sighetu Marmației · 27–31 Jul',desc:'Check-in 16:00–19:00 ⚠ · Check-out by 12:00 · +40 741 775 715'},
-  {lat:46.7493,lng:23.5283,name:'⑥ Sunny View',sub:'Cluj/Florești · 31 Jul–3 Aug',desc:'Check-in 14:00–23:30 · Check-out by 11:00 · +40 755 603 712'},
-];
-const SIGHTS=[
-  {lat:45.7494,lng:21.2300,name:'Piața Victoriei',desc:'1989 revolution · bullet holes on façades'},
-  {lat:45.7511,lng:21.2263,name:'Piața Unirii',desc:'Baroque square · two cathedrals facing each other'},
-  {lat:45.7198,lng:22.8876,name:'Corvin Castle',desc:'Most dramatic Gothic-Renaissance castle in Romania'},
-  {lat:46.0705,lng:23.5689,name:'Alba Iulia Fortress',desc:'Vauban star fortress · coronation cathedral'},
-  {lat:45.7921,lng:24.1514,name:'ASTRA Museum',desc:'Europe's largest open-air museum · 96ha · 300+ structures'},
-  {lat:45.7983,lng:24.1514,name:'Sibiu Old Town',desc:'"Eyes of Sibiu" · Large + Small Squares · Bridge of Lies'},
-  {lat:46.2189,lng:24.7948,name:'Sighișoara',desc:'Only inhabited medieval citadel in Europe (UNESCO)'},
-  {lat:46.0722,lng:24.5182,name:'Biertan',desc:'Most impressive fortified Saxon church (UNESCO)'},
-  {lat:45.6028,lng:24.6361,name:'Transfăgărășan Road',desc:'2,042m pass · 90 hairpin bends · check transfagarasan.info'},
-  {lat:45.5980,lng:24.6175,name:'Bâlea Lake',desc:'Glacial lake at 2,034m · cable car'},
-  {lat:45.3617,lng:24.6386,name:'Poenari Fortress',desc:'Real Dracula's castle · 1,480 steps'},
-  {lat:45.3582,lng:25.5539,name:'Peleș Castle',desc:'Most ornate royal palace in Romania · Open Wed from 10am'},
-  {lat:45.5272,lng:25.4605,name:'Râșnov Fortress',desc:'Kid-friendly hilltop fortress'},
-  {lat:45.5148,lng:25.3673,name:'Bran Castle',desc:'"Dracula Castle" · dramatic cliff-top setting'},
-  {lat:45.3648,lng:23.6892,name:'Transalpina Road',desc:'Romania's highest road · 2,145m'},
-  {lat:45.6431,lng:25.5882,name:'Brașov Old Town',desc:'Black Church · Piața Sfatului · Tampa Hill cable car'},
-  {lat:45.5954,lng:25.5432,name:'Poiana Brașov',desc:'Ski resort · hike trailhead'},
-  {lat:45.5581,lng:25.3489,name:'Zărnești',desc:'Bear Sanctuary (75+ bears) · Gorge hike trailhead'},
-  {lat:46.0681,lng:25.5533,name:'Viscri',desc:'Most celebrated Saxon village (UNESCO) · arrive before 9am'},
-  {lat:45.7182,lng:25.7029,name:'Prejmer',desc:'Best-preserved fortified church in SE Europe (UNESCO)'},
-  {lat:47.5117,lng:25.8688,name:'Voroneț Monastery',desc:'"Voroneț blue" never replicated · Sistine Chapel of the East'},
-  {lat:47.5343,lng:25.9455,name:'Humor Monastery',desc:'Warm reddish-brown tones'},
-  {lat:47.6648,lng:25.5309,name:'Moldovița Monastery',desc:'Siege of Constantinople fresco'},
-  {lat:47.7752,lng:25.7138,name:'Sucevița Monastery',desc:'Best preserved · Tree of Jesse fresco'},
-  {lat:47.6247,lng:25.9158,name:'Arbore Monastery',desc:'Smallest · most intimate · green tones'},
-  {lat:47.6488,lng:26.2519,name:'Suceava Fortress',desc:'Ruined citadel of Moldavian princes'},
-  {lat:47.6220,lng:26.1780,name:'Ciocănești Village',desc:'Elaborately painted house façades'},
-  {lat:47.8752,lng:25.5970,name:'Putna Monastery',desc:'Stefan cel Mare's greatest monastery · founded 1466'},
-  {lat:46.8320,lng:25.8238,name:'Bicaz Gorge',desc:'"Neck of Hell" · 8km canyon · 300m walls'},
-  {lat:46.7895,lng:25.8641,name:'Red Lake',desc:'Eerie submerged forest · hire a rowboat'},
-  {lat:47.9275,lng:23.8886,name:'Sighetu Marmației',desc:'Main town of Maramureș'},
-  {lat:47.7538,lng:23.6763,name:'Breb Village',desc:'Genuinely living 19th-century rural life'},
-  {lat:47.8001,lng:24.0463,name:'Bârsana Monastery',desc:'Most picturesque wooden church · extraordinary carved gate'},
-  {lat:47.7931,lng:24.1612,name:'Ieud Hill Church',desc:'Oldest wooden church in Romania · 1364 (UNESCO)'},
-  {lat:47.7682,lng:23.8461,name:'Desești Church',desc:'UNESCO wooden church · Maramureș style'},
-  {lat:47.7248,lng:23.8261,name:'Budești Church',desc:'UNESCO wooden church · Maramureș style'},
-  {lat:47.8432,lng:24.0981,name:'Rozavlea Church',desc:'UNESCO wooden church · 18th century'},
-  {lat:47.7648,lng:23.9214,name:'Șurdești Church',desc:'One of the tallest historic wooden spires'},
-  {lat:47.7129,lng:24.4382,name:'Vișeu de Sus',desc:'Vaser Valley Steam Railway · 1932 steam locomotive · Book: cffviseu.ro'},
-  {lat:47.9728,lng:23.6981,name:'Merry Cemetery Săpânța',desc:'Unique on Earth · humorous painted epitaphs'},
-  {lat:47.9653,lng:23.6947,name:'Săpânța-Peri Monastery',desc:'Tallest wooden church in the world · 75m spire'},
-  {lat:46.5608,lng:23.7858,name:'Salina Turda',desc:'Underground salt mine amusement park · 120m deep · Book: salinaturda.ro'},
-  {lat:46.5583,lng:23.6751,name:'Turda Gorge',desc:'Dramatic limestone gorge · full circuit 3h'},
-  {lat:46.4518,lng:23.5489,name:'Rimetea Village',desc:'Preserved white Hungarian village · Székelykő ridge above'},
-  {lat:47.0461,lng:21.9183,name:'Oradea',desc:'Romania's great Art Nouveau city'},
-  {lat:46.5832,lng:25.0746,name:'Sovata / Lacul Ursu',desc:'Heliothermal salt lake · effortless floating'},
-  {lat:47.6894,lng:24.9756,name:'Prislop Pass',desc:'1,416m · scenic mountain road Maramureș to Bucovina'},
-  {lat:46.3241,lng:23.7218,name:'Cheile Aiudului',desc:'Dramatic limestone gorge · off the tourist trail'},
-  {lat:45.3583,lng:25.5467,name:'Sinaia',desc:'Mountain resort town · pleasant after Peleș'},
-];
-const HIKES=[
-  {lat:45.5227,lng:23.9283,name:'Cindrel–Ștefanu Trailhead',desc:'Păltiniș · 2,244m ridge circuit · 16km · +900m · 6h'},
-  {lat:45.5954,lng:25.5432,name:'Postăvaru–Cristianu Trailhead',desc:'Poiana Brașov · 1,799m circuit · 14km · +700m · 5h'},
-  {lat:45.5242,lng:25.3014,name:'Zărnești Gorge + Ridge',desc:'Piatra Craiului NP · 16km · +600m · 5.5h'},
-  {lat:47.5270,lng:25.5621,name:'Rarău Trailhead',desc:'Câmpulung Moldovenesc · 1,651m · 8km · +500m · 3h'},
-  {lat:47.7538,lng:23.6763,name:'Dealul Solovan Trailhead',desc:'Above Breb village · 8km · +400m · 3h · Ask locals for path'},
-  {lat:46.4518,lng:23.5489,name:'Székelykő Trailhead',desc:'Above Rimetea · 7–8km · +450m · 3h'},
-  {lat:46.5583,lng:23.6751,name:'Turda Gorge Trailhead',desc:'8km loop · +350m · 3h · Moderate'},
-];
-const VIEWS={
-  all:[[44.0,19.5],[48.8,27.5]],
-  sibiu:[[45.2,23.2],[46.6,25.4]],
-  brasov:[[45.1,24.6],[46.5,26.4]],
-  bucovina:[[47.0,25.0],[48.3,26.8]],
-  maramures:[[47.4,23.0],[48.3,25.2]],
-  cluj:[[46.0,21.5],[47.4,24.6]],
-};
-let map,markersLayer,currentView='all';
-function initMap(){
-  if(map)return;
-  map=L.map('map',{zoomControl:true});
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
-    attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a>',maxZoom:18
-  }).addTo(map);
-  markersLayer=L.layerGroup().addTo(map);
-}
-function makeIcon(color,size){
-  return L.divIcon({
-    className:'',
-    html:`<svg width="${size}" height="${size*1.4}" viewBox="0 0 24 33" xmlns="http://www.w3.org/2000/svg"><path d="M12 0C5.4 0 0 5.4 0 12c0 7.2 12 21 12 21S24 19.2 24 12C24 5.4 18.6 0 12 0z" fill="${color}" stroke="rgba(0,0,0,0.2)" stroke-width="1.5"/><circle cx="12" cy="12" r="5" fill="rgba(255,255,255,0.9)"/></svg>`,
-    iconSize:[size,size*1.4],iconAnchor:[size/2,size*1.4],popupAnchor:[0,-size*1.3]
-  });
-}
-function renderMarkers(view){
-  markersLayer.clearLayers();
-  const b=VIEWS[view];
-  const inB=(lat,lng)=>view==='all'||(lat>=b[0][0]&&lat<=b[1][0]&&lng>=b[0][1]&&lng<=b[1][1]);
-  BASES.forEach(p=>{
-    if(!inB(p.lat,p.lng))return;
-    L.marker([p.lat,p.lng],{icon:makeIcon('#002B7F',28),zIndexOffset:1000})
-      .bindPopup(`<div class="popup-name">${p.name}</div><div class="popup-type popup-base">${p.sub}</div><div class="popup-desc">${p.desc}</div>`)
-      .addTo(markersLayer);
-  });
-  SIGHTS.forEach(p=>{
-    if(!inB(p.lat,p.lng))return;
-    L.marker([p.lat,p.lng],{icon:makeIcon('#CE1126',20)})
-      .bindPopup(`<div class="popup-name">${p.name}</div><div class="popup-type popup-sight">Sight</div><div class="popup-desc">${p.desc}</div>`)
-      .addTo(markersLayer);
-  });
-  HIKES.forEach(p=>{
-    if(!inB(p.lat,p.lng))return;
-    L.marker([p.lat,p.lng],{icon:makeIcon('#b8960a',20)})
-      .bindPopup(`<div class="popup-name">${p.name}</div><div class="popup-type popup-hike">Hike</div><div class="popup-desc">${p.desc}</div>`)
-      .addTo(markersLayer);
-  });
-}
-function showMap(view){
+function showPanel(id, el) {
   document.querySelectorAll('.panel,.map-panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
-  document.getElementById('mapPanel').classList.add('active');
-  if(event&&event.currentTarget)event.currentTarget.classList.add('active');
-  currentView=view;
-  document.querySelectorAll('.map-tab').forEach((t,i)=>{
-    const keys=['all','sibiu','brasov','bucovina','maramures','cluj'];
-    t.classList.toggle('active',keys[i]===view);
-  });
-  function tryInit(){
-    if(typeof L==='undefined'){setTimeout(tryInit,200);return;}
-    initMap();
-    renderMarkers(view);
-    map.fitBounds(VIEWS[view],{padding:[20,20]});
-    setTimeout(()=>map.invalidateSize(),100);
-  }
-  setTimeout(tryInit,50);
+  document.getElementById(id).classList.add('active');
+  if(el) el.classList.add('active');
 }
 
 function show(id) {
