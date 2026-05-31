@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<!-- saved from url=(0060)file:///C:/Users/Tine/Downloads/north_romania_2026_v9_1.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>North Romania 2026</title>
+<link href="./north_romania_2026_v8_files/css2" rel="stylesheet">
+<link rel="stylesheet" href="./north_romania_2026_v8_files/leaflet.css">
+<script src="./north_romania_2026_v8_files/leaflet.js.download"></script>
+<style>
+:root{
+  --bg:#f8f6f2;--surface:#ffffff;--card:#ffffff;--border:#e0dbd0;
+  --border-light:#ece8df;--text:#1a1610;--muted:#6a6050;--faint:#a09880;
+  --gold:#b07820;--gold-dim:#c9933a;--red:#b5321a;--red-dim:#fdf0ec;
+  --green-dim:#e8f3ec;--blue:#2a5a9a;--blue-dim:#e8eef8;
+}
+*{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;}
+.hero{padding:36px 48px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;background:#ffffff;}
+.hero h1{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:600;line-height:0.95;}
+.hero h1 em{font-style:italic;color:var(--gold);}
+.hero p{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
+.hero-stats{display:flex;border:1px solid var(--border);}
+.hs{padding:10px 16px;border-right:1px solid var(--border);}
+.hs:last-child{border-right:none;}
+.hs-l{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--faint);display:block;margin-bottom:2px;}
+.hs-v{font-family:'Cormorant Garamond',serif;font-size:18px;font-weight:600;}
+.route-bar{padding:10px 48px;background:#b5321a;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.85);border-bottom:1px solid var(--border);}
+.route-bar b{color:var(--gold);font-weight:400;}
+.layout{display:grid;grid-template-columns:220px 1fr;height:calc(100vh - 108px);}
+.sidebar{border-right:1px solid var(--border);height:100%;overflow-y:auto;scrollbar-width:none;}
+.sidebar::-webkit-scrollbar{display:none;}
+.sb-section{border-bottom:1px solid var(--border);}
+.sb-head{padding:10px 16px;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:500;background:var(--surface);}
+.sb-item{padding:8px 16px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;display:flex;justify-content:space-between;align-items:center;}
+.sb-item:last-child{border-bottom:none;}
+.sb-item:hover{background:var(--surface);}
+.sb-item.active{background:#fdf5e8;border-left:2px solid var(--gold);}
+.sb-day{font-size:13px;color:var(--text);font-weight:500;}
+.sb-date{font-size:11px;color:var(--faint);}
+.sb-tag{font-size:9px;padding:2px 6px;border-radius:2px;}
+.t-move{background:#fdf0d8;color:#9a6010;}
+.t-hike{background:#eef2f9;color:#2a5a9a;}
+.t-transit{background:#f0ede8;color:#6a6050;}
+.t-base{background:#edf5ee;color:#2a7a3a;}
+.content{height:100%;overflow-y:auto;}
+.panel{padding:28px 40px;display:none;}
+.panel.active{display:block;}
+.map-panel{display:none;height:100%;flex-direction:column;}
+.map-panel.active{display:flex;}
+#map{flex:1;z-index:1;}
+.leaflet-popup-content-wrapper{background:#ffffff;color:#1a1610;border:1px solid #e0dbd0;border-radius:2px;box-shadow:0 4px 20px rgba(0,0,0,0.15);}
+.leaflet-popup-tip{background:#ffffff;}
+.leaflet-popup-content{font-family:'DM Sans',sans-serif;font-size:13px;line-height:1.5;margin:10px 14px;}
+.popup-name{font-family:'Cormorant Garamond',serif;font-size:16px;font-weight:600;margin-bottom:3px;}
+.popup-type{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:6px;}
+.popup-base{color:#c9933a;}
+.popup-sight{color:#7aaae8;}
+.popup-hike{color:#6ab87a;}
+.popup-desc{color:#6a6050;font-size:12px;line-height:1.5;}
+.map-legend{position:absolute;bottom:28px;right:10px;z-index:1000;background:rgba(255,255,255,0.95);border:1px solid #e0dbd0;padding:10px 14px;box-shadow:0 2px 8px rgba(0,0,0,0.1);}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:11px;color:#8a7e72;margin-bottom:5px;}
+.legend-item:last-child{margin-bottom:0;}
+.legend-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
+.map-zoom-btns{position:absolute;top:10px;right:10px;z-index:1000;display:flex;flex-direction:column;gap:4px;}
+.map-zoom-btn{background:rgba(14,12,10,0.92);border:1px solid #2a2420;color:#8a7e72;font-size:11px;padding:5px 10px;cursor:pointer;letter-spacing:1px;text-transform:uppercase;white-space:nowrap;}
+.map-zoom-btn:hover{color:var(--gold);border-color:var(--gold-dim);}
+.map-zoom-btn.active{color:var(--gold);border-color:var(--gold);}
+.dp-num{font-family:'Cormorant Garamond',serif;font-size:40px;font-weight:600;line-height:1;color:#c0b8a8;}
+.dp-title{font-family:'Cormorant Garamond',serif;font-size:26px;font-weight:600;line-height:1.1;}
+.dp-head{display:flex;align-items:baseline;gap:16px;margin-bottom:4px;flex-wrap:wrap;}
+.dp-date{font-size:12px;color:var(--muted);margin-bottom:12px;}
+.tags{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap;}
+.tag{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 8px;font-weight:500;}
+.tag-transit{background:#f0ede8;color:#6a6050;border:1px solid #d0c8b8;}
+.tag-move{background:#fdf0d8;color:#9a6010;border:1px solid #e8c070;}
+.tag-base{background:#edf5ee;color:#2a7a3a;border:1px solid #a0d0a8;}
+.tag-hike{background:#eef2f9;color:#2a5a9a;border:1px solid #a0c0e0;}
+.drive{display:inline-flex;gap:6px;font-size:12px;color:var(--muted);background:rgba(255,255,255,0.04);border:1px solid var(--border);padding:4px 12px;margin-bottom:14px;}
+.body{font-size:13px;color:#4a4038;line-height:1.7;}
+.body p{margin-bottom:8px;}
+.body p:last-child{margin-bottom:0;}
+.body strong{color:#1a1610;font-weight:500;}
+.hike-box{background:#eef2f9;border:1px solid #c0d0e8;border-left:3px solid var(--blue);padding:12px 14px;margin:10px 0;}
+.hike-box .ht{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#2a5a9a;font-weight:500;margin-bottom:6px;}
+.hike-box .hd{font-size:12px;color:#4a5878;margin-bottom:8px;line-height:1.6;}
+.hike-stats{display:flex;gap:16px;flex-wrap:wrap;}
+.hike-stats span{font-size:11px;color:#2a5a9a;font-weight:500;}
+.warn{background:#fdf5e8;border-left:3px solid var(--gold);padding:8px 12px;margin:10px 0;font-size:12px;color:#7a5010;}
+.warn strong{color:var(--gold);}
+.book-badge{display:inline-block;background:var(--red-dim);border:1px solid var(--red);color:#e87050;font-size:9px;letter-spacing:1px;text-transform:uppercase;padding:1px 6px;margin-left:4px;vertical-align:middle;}
+.ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--border);border:1px solid var(--border);margin-top:8px;}
+.ov-card{background:#ffffff;padding:16px 18px;border:1px solid var(--border);}
+.ov-label{font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:4px;}
+.ov-name{font-size:14px;font-weight:500;margin-bottom:6px;}
+.ov-row{font-size:11px;color:var(--muted);line-height:1.6;display:flex;gap:6px;align-items:baseline;margin-bottom:2px;}
+.ov-row-label{font-size:9px;letter-spacing:1px;text-transform:uppercase;color:var(--faint);flex-shrink:0;width:72px;}
+.ov-link{display:inline-block;margin-top:10px;font-size:11px;color:var(--gold);text-decoration:none;border:1px solid var(--gold-dim);padding:3px 10px;}
+.ov-link:hover{background:rgba(201,147,58,0.1);}
+.bk-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;}
+.bk{background:#ffffff;border:1px solid var(--border);padding:14px 16px;display:flex;gap:12px;}
+.bk-num{font-family:'Cormorant Garamond',serif;font-size:32px;font-weight:700;line-height:1;color:var(--border-light);flex-shrink:0;width:28px;}
+.bk-num.u{color:var(--red);}
+.bk-name{font-size:13px;font-weight:500;color:var(--text);margin-bottom:3px;}
+.bk-detail{font-size:11px;color:var(--muted);line-height:1.5;}
+.bk-url{font-size:10px;color:var(--gold-dim);margin-top:3px;font-family:monospace;}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px;}
+th{text-align:left;font-size:9px;letter-spacing:2px;text-transform:uppercase;color:#a09880;padding:8px 12px;background:#f8f6f2;border-bottom:1px solid var(--border);font-weight:500;}
+td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--muted);}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:rgba(255,255,255,0.02);color:var(--text);}
+td strong{color:var(--text);}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div>
+    <p>🇷🇴 Family Road Trip · Ljubljana → Romania → Ljubljana</p>
+    <h1>North <em>Romania</em></h1>
+  </div>
+  <div class="hero-stats">
+    <div class="hs"><span class="hs-l">Depart</span><span class="hs-v">Sat 11 Jul</span></div>
+    <div class="hs"><span class="hs-l">Return</span><span class="hs-v">Tue 4 Aug</span></div>
+    <div class="hs"><span class="hs-l">Days</span><span class="hs-v">25</span></div>
+    <div class="hs"><span class="hs-l">Bases</span><span class="hs-v">6 + transit</span></div>
+    <div class="hs"><span class="hs-l">km</span><span class="hs-v">~5,100</span></div>
+  </div>
+</div>
+<div class="route-bar">Ljubljana <b>→</b> Timișoara <b>→</b> Sibiu/Cisnădie <b>→</b> Brașov <b>→</b> Gura Humorului <b>→</b> Sighetu Marmației <b>→</b> Cluj/Florești <b>→</b> Debrecen <b>→</b> Ljubljana</div>
+
+<div class="layout">
+<div class="sidebar">
+  <div class="sb-section">
+    <div class="sb-head">Overview</div>
+    <div class="sb-item active" onclick="show(&#39;overview&#39;)"><span class="sb-day">Bases &amp; Bookings</span></div>
+    <div class="sb-item" onclick="show(&#39;driving&#39;)"><span class="sb-day">Driving Summary</span></div>
+    <div class="sb-item" onclick="showMap(&#39;all&#39;)"><span class="sb-day">🗺 Map — All</span></div>
+    <div class="sb-item" onclick="showMap(&#39;sibiu&#39;)"><span class="sb-day">🗺 Sibiu region</span></div>
+    <div class="sb-item" onclick="showMap(&#39;brasov&#39;)"><span class="sb-day">🗺 Brașov region</span></div>
+    <div class="sb-item" onclick="showMap(&#39;bucovina&#39;)"><span class="sb-day">🗺 Bucovina</span></div>
+    <div class="sb-item" onclick="showMap(&#39;maramures&#39;)"><span class="sb-day">🗺 Maramureș</span></div>
+    <div class="sb-item" onclick="showMap(&#39;cluj&#39;)"><span class="sb-day">🗺 Cluj region</span></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-head">Transit In</div>
+    <div class="sb-item" onclick="show(&#39;d1&#39;)"><span class="sb-day">Day 1</span><div style="text-align:right"><div class="sb-date">Sat 11 Jul</div><span class="sb-tag t-transit">Transit</span></div></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-head">① Timișoara · 1 night</div>
+    <div class="sb-item" onclick="show(&#39;d2&#39;)"><span class="sb-day">Day 2</span><div style="text-align:right"><div class="sb-date">Sun 12 Jul</div><span class="sb-tag t-move">Move → Sibiu</span></div></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-head">② Sibiu/Cisnădie · 5 nights</div>
+    <div class="sb-item" onclick="show(&#39;d3&#39;)"><span class="sb-day">Day 3</span><div style="text-align:right"><div class="sb-date">Mon 13 Jul</div><span class="sb-tag t-base">ASTRA + Old Town</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d4&#39;)"><span class="sb-day">Day 4</span><div style="text-align:right"><div class="sb-date">Tue 14 Jul</div><span class="sb-tag t-base">Sighișoara + Biertan</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d5&#39;)"><span class="sb-day">Day 5</span><div style="text-align:right"><div class="sb-date">Wed 15 Jul</div><span class="sb-tag t-hike">Hike Cindrel</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d6&#39;)"><span class="sb-day">Day 6</span><div style="text-align:right"><div class="sb-date">Thu 16 Jul</div><span class="sb-tag t-base">Transfăgărășan</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d7&#39;)"><span class="sb-day">Day 7</span><div style="text-align:right"><div class="sb-date">Fri 17 Jul</div><span class="sb-tag t-move">Move → Brașov</span></div></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-head">③ Brașov · 6 nights</div>
+    <div class="sb-item" onclick="show(&#39;d8&#39;)"><span class="sb-day">Day 8</span><div style="text-align:right"><div class="sb-date">Sat 18 Jul</div><span class="sb-tag t-base">Rest + Explore</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d9&#39;)"><span class="sb-day">Day 9</span><div style="text-align:right"><div class="sb-date">Sun 19 Jul</div><span class="sb-tag t-hike">Hike Postăvaru</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d10&#39;)"><span class="sb-day">Day 10</span><div style="text-align:right"><div class="sb-date">Mon 20 Jul</div><span class="sb-tag t-base">Bears + Bran</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d11&#39;)"><span class="sb-day">Day 11</span><div style="text-align:right"><div class="sb-date">Tue 21 Jul</div><span class="sb-tag t-hike">Hike Zărnești</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d12&#39;)"><span class="sb-day">Day 12</span><div style="text-align:right"><div class="sb-date">Wed 22 Jul</div><span class="sb-tag t-base">Peleș + Râșnov</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d13&#39;)"><span class="sb-day">Day 13</span><div style="text-align:right"><div class="sb-date">Thu 23 Jul</div><span class="sb-tag t-move">Move → Gura Hum.</span></div></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-head">④ Gura Humorului · 4 nights</div>
+    <div class="sb-item" onclick="show(&#39;d14&#39;)"><span class="sb-day">Day 14</span><div style="text-align:right"><div class="sb-date">Fri 24 Jul</div><span class="sb-tag t-base">Monasteries 1</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d15&#39;)"><span class="sb-day">Day 15</span><div style="text-align:right"><div class="sb-date">Sat 25 Jul</div><span class="sb-tag t-base">Monasteries 2</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d16&#39;)"><span class="sb-day">Day 16</span><div style="text-align:right"><div class="sb-date">Sun 26 Jul</div><span class="sb-tag t-hike">Rarău + Bicaz</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d17&#39;)"><span class="sb-day">Day 17</span><div style="text-align:right"><div class="sb-date">Mon 27 Jul</div><span class="sb-tag t-move">Move → Sighet</span></div></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-head">⑤ Sighet · 4 nights</div>
+    <div class="sb-item" onclick="show(&#39;d18&#39;)"><span class="sb-day">Day 18</span><div style="text-align:right"><div class="sb-date">Tue 28 Jul</div><span class="sb-tag t-base">Wooden Churches</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d19&#39;)"><span class="sb-day">Day 19</span><div style="text-align:right"><div class="sb-date">Wed 29 Jul</div><span class="sb-tag t-hike">Breb + Hike</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d20&#39;)"><span class="sb-day">Day 20</span><div style="text-align:right"><div class="sb-date">Thu 30 Jul</div><span class="sb-tag t-base">Steam Train + Cemetery</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d21&#39;)"><span class="sb-day">Day 21</span><div style="text-align:right"><div class="sb-date">Fri 31 Jul</div><span class="sb-tag t-move">Move → Cluj</span></div></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-head">⑥ Cluj/Florești · 3 nights</div>
+    <div class="sb-item" onclick="show(&#39;d22&#39;)"><span class="sb-day">Day 22</span><div style="text-align:right"><div class="sb-date">Sat 1 Aug</div><span class="sb-tag t-base">Salina Turda</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d23&#39;)"><span class="sb-day">Day 23</span><div style="text-align:right"><div class="sb-date">Sun 2 Aug</div><span class="sb-tag t-hike">Hike Rimetea</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d24&#39;)"><span class="sb-day">Day 24</span><div style="text-align:right"><div class="sb-date">Mon 3 Aug</div><span class="sb-tag t-move">Move → Debrecen</span></div></div>
+  </div>
+  <div class="sb-section">
+    <div class="sb-head">Transit Home</div>
+    <div class="sb-item" onclick="show(&#39;d25&#39;)"><span class="sb-day">Day 25</span><div style="text-align:right"><div class="sb-date">Tue 4 Aug</div><span class="sb-tag t-transit">→ Ljubljana</span></div></div>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- MAP -->
+<div class="map-panel" id="mapPanel">
+  <div id="map" style="position:relative;">
+    <div class="map-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:#c9933a"></div>Base / hotel</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4a72a8"></div>Key sight</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#4a8a5a"></div>Hike trailhead</div>
+    </div>
+  </div>
+</div>
+
+<!-- OVERVIEW -->
+<div class="panel active" id="overview">
+  <div class="dp-head"><div class="dp-num">⌂</div><div class="dp-title">Bases &amp; Accommodation</div></div>
+  <div class="dp-date" style="margin-bottom:12px">All confirmed · All free parking · Separate spaces for parents and kids</div>
+  <div class="ov-grid">
+
+    <div class="ov-card">
+      <div class="ov-label">① Timișoara · 1 night · 11–12 Jul · #6805.412.991</div>
+      <div class="ov-name">Boheme Studio</div>
+      <div class="ov-row"><span class="ov-row-label">Price</span>€50/night · €50 total</div>
+      <div class="ov-row"><span class="ov-row-label">Check-in</span>14:00 – 23:30</div>
+      <div class="ov-row"><span class="ov-row-label">Check-out</span>05:00 – 11:00</div>
+      <div class="ov-row"><span class="ov-row-label">Cancel by</span>8 Jul</div>
+      <div class="ov-row"><span class="ov-row-label">Washing</span>❌ no washing machine</div>
+      <div class="ov-row"><span class="ov-row-label">Phone</span>+40 742 106 932</div>
+      <a class="ov-link" href="https://www.booking.com/hotel/ro/boheme-timisoara.en-gb.html" target="_blank">Booking.com →</a>
+    </div>
+
+    <div class="ov-card">
+      <div class="ov-label">② Sibiu/Cisnădie · 5 nights · 12–17 Jul · #5683.862.059</div>
+      <div class="ov-name">Julia's Residence</div>
+      <div class="ov-row"><span class="ov-row-label">Price</span>€58/night · €288 total</div>
+      <div class="ov-row"><span class="ov-row-label">Check-in</span>15:00 – 00:00</div>
+      <div class="ov-row"><span class="ov-row-label">Check-out</span>08:00 – 10:00</div>
+      <div class="ov-row"><span class="ov-row-label">Cancel by</span>6 Jul</div>
+      <div class="ov-row"><span class="ov-row-label">Washing</span>✅ washing machine</div>
+      <div class="ov-row"><span class="ov-row-label">Phone</span>+40 749 265 299</div>
+      <a class="ov-link" href="https://www.booking.com/hotel/ro/apartament-2-camere-terasa-40mp.en-gb.html" target="_blank">Booking.com →</a>
+    </div>
+
+    <div class="ov-card">
+      <div class="ov-label">③ Brașov · 6 nights · 17–23 Jul · #6094.123.098</div>
+      <div class="ov-name">AlbertView</div>
+      <div class="ov-row"><span class="ov-row-label">Price</span>€61/night · €367 total (incl. city tax)</div>
+      <div class="ov-row"><span class="ov-row-label">Check-in</span>24h flexible</div>
+      <div class="ov-row"><span class="ov-row-label">Check-out</span>24h flexible</div>
+      <div class="ov-row"><span class="ov-row-label">Cancel by</span>15 Jul</div>
+      <div class="ov-row"><span class="ov-row-label">Washing</span>✅ washing machine</div>
+      <div class="ov-row"><span class="ov-row-label">Phone</span>+40 721 555 451</div>
+      <a class="ov-link" href="https://www.booking.com/hotel/ro/albertview-brasov.en-gb.html" target="_blank">Booking.com →</a>
+    </div>
+
+    <div class="ov-card">
+      <div class="ov-label">④ Gura Humorului · 4 nights · 23–27 Jul · #6991.293.326</div>
+      <div class="ov-name">Piano Apartament</div>
+      <div class="ov-row"><span class="ov-row-label">Price</span>€53/night · €213 total</div>
+      <div class="ov-row"><span class="ov-row-label">Check-in</span>15:00 – 22:00</div>
+      <div class="ov-row"><span class="ov-row-label">Check-out</span>08:00 – 11:00</div>
+      <div class="ov-row"><span class="ov-row-label">Cancel by</span>17 Jul</div>
+      <div class="ov-row"><span class="ov-row-label">Washing</span>✅ washing machine</div>
+      <div class="ov-row"><span class="ov-row-label">Phone</span>+40 745 001 298</div>
+      <a class="ov-link" href="https://www.booking.com/hotel/ro/piano-apartament-gura-humorului.en-gb.html" target="_blank">Booking.com →</a>
+    </div>
+
+    <div class="ov-card">
+      <div class="ov-label">⑤ Sighetu Marmației · 4 nights · 27–31 Jul · #5218.868.386</div>
+      <div class="ov-name">Boulevard Apartament</div>
+      <div class="ov-row"><span class="ov-row-label">Price</span>€47/night · €187 total</div>
+      <div class="ov-row"><span class="ov-row-label">Check-in</span>16:00 – 19:00 ⚠</div>
+      <div class="ov-row"><span class="ov-row-label">Check-out</span>until 12:00</div>
+      <div class="ov-row"><span class="ov-row-label">Cancel by</span>23 Jul</div>
+      <div class="ov-row"><span class="ov-row-label">Washing</span>✅ washing machine</div>
+      <div class="ov-row"><span class="ov-row-label">Phone</span>+40 741 775 715</div>
+      <a class="ov-link" href="https://www.booking.com/hotel/ro/modern-apartment-pe-bulevard.en-gb.html" target="_blank">Booking.com →</a>
+    </div>
+
+    <div class="ov-card">
+      <div class="ov-label">⑥ Cluj/Florești · 3 nights · 31 Jul–3 Aug · #5178.410.333</div>
+      <div class="ov-name">Sunny View</div>
+      <div class="ov-row"><span class="ov-row-label">Price</span>€58/night · €173 total</div>
+      <div class="ov-row"><span class="ov-row-label">Check-in</span>14:00 – 23:30</div>
+      <div class="ov-row"><span class="ov-row-label">Check-out</span>until 11:00</div>
+      <div class="ov-row"><span class="ov-row-label">Cancel by</span>28 Jul</div>
+      <div class="ov-row"><span class="ov-row-label">Washing</span>✅ washing machine</div>
+      <div class="ov-row"><span class="ov-row-label">Phone</span>+40 755 603 712</div>
+      <a class="ov-link" href="https://www.booking.com/hotel/ro/cozy-sofi.en-gb.html" target="_blank">Booking.com →</a>
+    </div>
+
+  </div>
+
+  <div style="margin-top:28px">
+    <div class="dp-date" style="margin-bottom:8px">Key Bookings Still Needed</div>
+    <div class="bk-grid">
+      <div class="bk"><div class="bk-num u">1</div><div><div class="bk-name">Libearty Bear Sanctuary</div><div class="bk-detail">Book online max 10 days ahead. Fill in form on their website.<div class="bk-url">millions.ro/bears</div></div></div></div>
+      <div class="bk"><div class="bk-num u">2</div><div><div class="bk-name">Vaser Valley Steam Railway</div><div class="bk-detail">Several weeks ahead. Day 20 = Thu ✅<div class="bk-url">cffviseu.ro</div></div></div></div>
+      <div class="bk"><div class="bk-num">3</div><div><div class="bk-name">Peleș Castle</div><div class="bk-detail">Day 12 = Wed ✅ Open from 10am.<div class="bk-url">peles.ro</div></div></div></div>
+      <div class="bk"><div class="bk-num">4</div><div><div class="bk-name">Salina Turda</div><div class="bk-detail">Few days ahead. Open daily 9am–5pm.<div class="bk-url">salinaturda.ro</div></div></div></div>
+      <div class="bk"><div class="bk-num">5</div><div><div class="bk-name">Romanian E-Toll</div><div class="bk-detail">Buy before crossing border. ~€7/7 days.<div class="bk-url">roviniete.ro</div></div></div></div>
+      <div class="bk"><div class="bk-num">6</div><div><div class="bk-name">Debrecen Hotel</div><div class="bk-detail">Book ~1 week before departure. Any 3-star, €60–80.</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- DRIVING -->
+<div class="panel" id="driving">
+  <div class="dp-head"><div class="dp-num">🚗</div><div class="dp-title">Driving Summary</div></div>
+  <div class="dp-date">Add 25–30% to Google Maps on DN roads · Motorways no buffer needed</div>
+  <div style="border:1px solid var(--border)">
+  <table>
+    <thead><tr><th>Day</th><th>Date</th><th>Route</th><th>km</th><th>Time</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1</strong></td><td>Sat 11 Jul</td><td>Ljubljana → Timișoara</td><td>~950</td><td>~10h</td><td>All motorway. Leave 6am.</td></tr>
+      <tr><td><strong>2</strong></td><td>Sun 12 Jul</td><td>Timișoara → Corvin → Alba Iulia → Cisnădie</td><td>~270</td><td>~5h</td><td>⚠ Day after 950km. Alba Iulia skippable.</td></tr>
+      <tr><td><strong>7</strong></td><td>Fri 17 Jul</td><td>Cisnădie → Transalpina → Brașov</td><td>~220</td><td>~4.5h</td><td>Transalpina bonus — skip if bad weather.</td></tr>
+      <tr><td><strong>13</strong></td><td>Thu 23 Jul</td><td>Brașov → Viscri → Prejmer → Gura Humorului</td><td>~370</td><td>~6h</td><td>Leave early. Viscri before 9am.</td></tr>
+      <tr><td><strong>17</strong></td><td>Mon 27 Jul</td><td>Gura Humorului → Putna → Sighet</td><td>~160</td><td>~3h</td><td>Leave by 12:00 — check-in closes 19:00.</td></tr>
+      <tr><td><strong>21</strong></td><td>Fri 31 Jul</td><td>Sighet → Sovata → Cluj/Florești</td><td>~280</td><td>~5h</td><td>Sovata salt lake stop en route.</td></tr>
+      <tr><td><strong>24</strong></td><td>Mon 3 Aug</td><td>Cluj → Oradea → Debrecen</td><td>~280</td><td>~4h</td><td>Oradea stop en route.</td></tr>
+      <tr><td><strong>25</strong></td><td>Tue 4 Aug</td><td>Debrecen → Ljubljana</td><td>~650</td><td>~6.5h</td><td>All motorway. Leave mid-morning.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="warn" style="margin-top:14px"><strong>Heavy days:</strong> Day 1 (950km transit), Day 2 (day after 950km — Alba Iulia skippable), Day 13 (370km + Viscri — longest base move). Day 17: leave Gura Humorului by 12:00 — Boulevard Apartament check-in closes at 19:00.</div>
+</div>
+
+<!-- DAY 1 -->
+<div class="panel" id="d1">
+  <div class="dp-head"><div class="dp-num">1</div><div class="dp-title">Ljubljana → Timișoara</div></div>
+  <div class="dp-date">Saturday 11 July</div>
+  <div class="tags"><span class="tag tag-transit">Transit</span></div>
+  <div class="drive">🚗 ~950 km · ~10h · All motorway · Leave 6am</div>
+  <div class="body"><p>Ljubljana → Zagreb → Budapest → Timișoara. Arrive ~5pm. Fill up in Hungary. <strong>Buy Romanian roviniete e-toll before crossing border</strong> (roviniete.ro, ~€7/7 days). Buy Hungarian vignette if not held (~€15 annual).</p></div>
+</div>
+
+<!-- DAY 2 -->
+<div class="panel" id="d2">
+  <div class="dp-head"><div class="dp-num">2</div><div class="dp-title">Timișoara → Cisnădie</div></div>
+  <div class="dp-date">Sunday 12 July · Check-out Timișoara by 11:00 · Check-in Cisnădie from 15:00</div>
+  <div class="tags"><span class="tag tag-move">Base Move</span></div>
+  <div class="drive">🚗 ~270 km · ~5h with stops</div>
+  <div class="body">
+    <p><strong>Timișoara morning (2h max):</strong> Piața Victoriei (1989 revolution, bullet holes on façades), Piața Unirii (baroque square, two cathedrals). Short — you drive today.</p>
+    <p><strong>Corvin Castle, Hunedoara</strong> (130km): Most dramatic Gothic-Renaissance castle in Romania. Real drawbridge, towers on a rock. Arrive ~11am, allow 1.5h.</p>
+    <p><strong>Alba Iulia</strong> (50km east): Vauban star fortress, coronation cathedral. 45–60 min. <em>Skip if Corvin ran long.</em></p>
+    <div class="warn"><strong>⚠</strong> Day after 950km. Alba Iulia is skippable without guilt.</div>
+  </div>
+</div>
+
+<!-- DAY 3 -->
+<div class="panel" id="d3">
+  <div class="dp-head"><div class="dp-num">3</div><div class="dp-title">Sibiu — ASTRA + Old Town</div></div>
+  <div class="dp-date">Monday 13 July · Base: Cisnădie (Day 1 of 5) · ~20km to Sibiu centre</div>
+  <div class="tags"><span class="tag tag-base">Base Day</span></div>
+  <div class="body">
+    <p><strong>ASTRA National Museum Complex:</strong> Europe's largest open-air museum, 96ha, 300+ original rural structures. Half-day minimum.</p>
+    <p><strong>Sibiu old town:</strong> "Eyes of Sibiu" dormer windows, Large + Small Squares, Bridge of Lies, Lutheran Cathedral tower.</p>
+  </div>
+</div>
+
+<!-- DAY 4 -->
+<div class="panel" id="d4">
+  <div class="dp-head"><div class="dp-num">4</div><div class="dp-title">Sighișoara + Biertan</div></div>
+  <div class="dp-date">Tuesday 14 July · Base: Cisnădie (Day 2 of 5)</div>
+  <div class="tags"><span class="tag tag-base">Base Day</span></div>
+  <div class="drive">🚗 ~170 km round trip</div>
+  <div class="body">
+    <p><strong>Sighișoara</strong> (65km): Only continuously inhabited medieval citadel in Europe (UNESCO). Arrive before 9am. Allow 2h.</p>
+    <p><strong>Biertan</strong> (30km back): Most impressive fortified Saxon church in Romania (UNESCO). 1h.</p>
+  </div>
+</div>
+
+<!-- DAY 5 -->
+<div class="panel" id="d5">
+  <div class="dp-head"><div class="dp-num">5</div><div class="dp-title">Hike — Cindrel Summit</div></div>
+  <div class="dp-date">Wednesday 15 July · Base: Cisnădie (Day 3 of 5)</div>
+  <div class="tags"><span class="tag tag-hike">Hike Day</span></div>
+  <div class="drive">🚗 ~30 km · Păltiniș resort</div>
+  <div class="hike-box">
+    <div class="ht">🥾 Cindrel — Ștefanu Ridge Circuit (2,244m)</div>
+    <div class="hd">From Păltiniș (1,450m), ascend to Cindrel summit then continue along the ridge to Vârful Ștefanu (2,242m) and loop back down a different valley. Proper ridge walking, wide open above the treeline, varied terrain. Mountain restaurant at Păltiniș for lunch on return.</div>
+    <div class="hike-stats"><span>📍 16 km</span><span>↑ +900m</span><span>⏱ 5.5–6h</span><span>● Moderate</span></div>
+  </div>
+  <div class="body"><p>Back in Sibiu by late afternoon.</p></div>
+</div>
+
+<!-- DAY 6 -->
+<div class="panel" id="d6">
+  <div class="dp-head"><div class="dp-num">6</div><div class="dp-title">Transfăgărășan Road</div></div>
+  <div class="dp-date">Thursday 16 July · Base: Cisnădie (Day 4 of 5)</div>
+  <div class="tags"><span class="tag tag-base">Base Day</span></div>
+  <div class="drive">🚗 ~190 km round trip</div>
+  <div class="body">
+    <p>Drive south over the pass (2,042m). 90 hairpin bends, waterfalls, tunnels. <strong>Bâlea Lake</strong> at the top. <strong>Poenari Fortress</strong> on south side — real Dracula's castle, 1,480 steps. Return north.</p>
+    <div class="warn"><strong>⚠ Check first:</strong> transfagarasan.info — road opens ~8am, can close in July.</div>
+  </div>
+</div>
+
+<!-- DAY 7 -->
+<div class="panel" id="d7">
+  <div class="dp-head"><div class="dp-num">7</div><div class="dp-title">Cisnădie → Transalpina → Brașov</div></div>
+  <div class="dp-date">Friday 17 July · Check-out Cisnădie by 10:00 · Check-in Brașov 24h flexible</div>
+  <div class="tags"><span class="tag tag-move">Base Move</span></div>
+  <div class="drive">🚗 ~220 km · ~4.5h</div>
+  <div class="body"><p><strong>Transalpina</strong> (DN67C, 2,145m): Romania's highest road. Drive high section then cut east to Brașov. Skip if weather poor — bonus not a must.</p></div>
+</div>
+
+<!-- DAY 8 -->
+<div class="panel" id="d8">
+  <div class="dp-head"><div class="dp-num">8</div><div class="dp-title">Brașov — Rest + Explore</div></div>
+  <div class="dp-date">Saturday 18 July · Base: Brașov (Day 1 of 6)</div>
+  <div class="tags"><span class="tag tag-base">Base Day</span></div>
+  <div class="body"><p>Rest day after 3 base moves. <strong>Black Church</strong> (largest Gothic church in SE Europe), <strong>Piața Sfatului</strong>, <strong>Tampa Hill cable car</strong> for panoramic views. Evening on the main square.</p></div>
+</div>
+
+<!-- DAY 9 -->
+<div class="panel" id="d9">
+  <div class="dp-head"><div class="dp-num">9</div><div class="dp-title">Hike — Postăvaru Summit</div></div>
+  <div class="dp-date">Sunday 19 July · Base: Brașov (Day 2 of 6)</div>
+  <div class="tags"><span class="tag tag-hike">Hike Day</span></div>
+  <div class="drive">🚗 ~25 km · Poiana Brașov</div>
+  <div class="hike-box">
+    <div class="ht">🥾 Postăvaru — Cristianu Mare Circuit (1,799m)</div>
+    <div class="hd">From Poiana Brașov, ascend to Postăvaru summit then continue along the ridge to Cristianu Mare and loop back down. 360° views throughout: Brașov below, Bucegi massif, Piatra Craiului ridge, Făgăraș mountains.</div>
+    <div class="hike-stats"><span>📍 14 km</span><span>↑ +700m</span><span>⏱ 5h</span><span>● Moderate</span></div>
+  </div>
+</div>
+
+<!-- DAY 10 -->
+<div class="panel" id="d10">
+  <div class="dp-head"><div class="dp-num">10</div><div class="dp-title">Bear Sanctuary + Bran Castle</div></div>
+  <div class="dp-date">Monday 20 July · Base: Brașov (Day 3 of 6)</div>
+  <div class="tags"><span class="tag tag-base">Base Day</span></div>
+  <div class="drive">🚗 ~30 km</div>
+  <div class="body">
+    <p><strong>Libearty Bear Sanctuary</strong>, Zărnești (14km): 75+ rescued bears in 70ha forest. Small guided groups. <span class="book-badge">Book max 10 days ahead</span> millions.ro/bears</p>
+    <p><strong>Bran Castle:</strong> Dramatic cliff-top setting. The Dracula connection is mostly marketing but the setting is genuinely impressive and kids enjoy it.</p>
+    <p><strong>Râșnov Fortress</strong> (15km from Bran): Hilltop medieval fortress, kid-friendly, great views over the valley. All three sights are within 15km of each other — natural cluster.</p>
+  </div>
+</div>
+
+<!-- DAY 11 -->
+<div class="panel" id="d11">
+  <div class="dp-head"><div class="dp-num">11</div><div class="dp-title">Hike — Zărnești Gorge</div></div>
+  <div class="dp-date">Tuesday 21 July · Base: Brașov (Day 4 of 6)</div>
+  <div class="tags"><span class="tag tag-hike">Hike Day</span></div>
+  <div class="drive">🚗 ~50 km · Piatra Craiului NP</div>
+  <div class="hike-box">
+    <div class="ht">🥾 Zărnești Gorge + Piatra Craiului Ridge Approach</div>
+    <div class="hd">Walk the full gorge then continue up toward the Piatra Craiului ridge for proper mountain views above the canyon. The gorge narrows to just a few metres at its tightest point before opening into the dramatic ridge landscape above.</div>
+    <div class="hike-stats"><span>📍 16 km</span><span>↑ +600m</span><span>⏱ 5.5h</span><span>● Moderate</span></div>
+  </div>
+</div>
+
+<!-- DAY 12 -->
+<div class="panel" id="d12">
+  <div class="dp-head"><div class="dp-num">12</div><div class="dp-title">Peleș Castle</div></div>
+  <div class="dp-date">Wednesday 22 July · Base: Brașov (Day 5 of 6)</div>
+  <div class="tags"><span class="tag tag-base">Base Day</span></div>
+  <div class="drive">🚗 ~90 km round trip · Sinaia</div>
+  <div class="body">
+    <p><strong>Peleș Castle</strong>, Sinaia (45km): Most ornate royal palace in Romania, 160 rooms of neo-Renaissance excess. Open Wed from 10am, last entry 4pm. Max 2,000 visitors/day. With Râșnov moved to Day 10, you now have time to do Peleș properly — the interior tour takes 1.5–2h and deserves it. <span class="book-badge">Book ahead</span> peles.ro</p>
+    <p>Sinaia itself is a pleasant mountain resort town — good lunch options and a monastery worth a quick look.</p>
+  </div>
+</div>
+
+<!-- DAY 13 -->
+<div class="panel" id="d13">
+  <div class="dp-head"><div class="dp-num">13</div><div class="dp-title">Brașov → Viscri → Gura Humorului</div></div>
+  <div class="dp-date">Thursday 23 July · Check-out Brașov 24h · Check-in Gura Humorului 15:00–22:00</div>
+  <div class="tags"><span class="tag tag-move">Base Move</span></div>
+  <div class="drive">🚗 ~370 km · ~6h · Leave early</div>
+  <div class="body">
+    <p><strong>Viscri</strong> (60km NE): Most celebrated Saxon village in Transylvania. <strong>Arrive before 9am.</strong> Allow 1–1.5h.</p>
+    <p><strong>Prejmer</strong> (25km back): 272-cell honeycomb interior (UNESCO). 45 min. Skip if Viscri ran long.</p>
+    <p>Drive north to Gura Humorului (~260km). Arrive afternoon.</p>
+  </div>
+</div>
+
+<!-- DAY 14 -->
+<div class="panel" id="d14">
+  <div class="dp-head"><div class="dp-num">14</div><div class="dp-title">Painted Monasteries — Group 1</div></div>
+  <div class="dp-date">Friday 24 July · Base: Gura Humorului (Day 1 of 4)</div>
+  <div class="tags"><span class="tag tag-base">Base Day</span></div>
+  <div class="drive">🚗 ~80 km</div>
+  <div class="body">
+    <p><strong>Voroneț</strong> (5km): "Voroneț blue" never replicated in 500 years. Last Judgement on entire west wall. 1h.</p>
+    <p><strong>Humor</strong> (6km): Warm reddish-brown tones. <strong>Moldovița</strong> (60km): Largest, fortified enclosure, Siege of Constantinople fresco.</p>
+  </div>
+</div>
+
+<!-- DAY 15 -->
+<div class="panel" id="d15">
+  <div class="dp-head"><div class="dp-num">15</div><div class="dp-title">Painted Monasteries — Group 2</div></div>
+  <div class="dp-date">Saturday 25 July · Base: Gura Humorului (Day 2 of 4)</div>
+  <div class="tags"><span class="tag tag-base">Base Day</span></div>
+  <div class="drive">🚗 ~90 km</div>
+  <div class="body">
+    <p><strong>Sucevița</strong> (45km): Best preserved, Tree of Jesse fresco. <strong>Arbore</strong> (30km): Smallest, most intimate, green tones.</p>
+    <p><strong>Suceava Fortress:</strong> Ruined citadel. <strong>Ciocănești:</strong> Elaborately painted house façades.</p>
+  </div>
+</div>
+
+<!-- DAY 16 -->
+<div class="panel" id="d16">
+  <div class="dp-head"><div class="dp-num">16</div><div class="dp-title">Hike — Rarău + Bicaz Gorge</div></div>
+  <div class="dp-date">Sunday 26 July · Base: Gura Humorului (Day 3 of 4) · Leave 7:30am</div>
+  <div class="tags"><span class="tag tag-hike">Hike Day</span></div>
+  <div class="drive">🚗 ~160 km driving</div>
+  <div class="hike-box">
+    <div class="ht">🥾 Rarău — Pietrele Doamnei (1,651m)</div>
+    <div class="hd">Dramatic dolomite towers in Bucovina forested hills. Trailhead at Câmpulung Moldovenesc (30km).</div>
+    <div class="hike-stats"><span>📍 8 km</span><span>↑ +500m</span><span>⏱ 3h</span><span>● Moderate</span></div>
+  </div>
+  <div class="body">
+    <p><strong>Bicaz Gorge</strong> (60km south): 8km canyon, 300m walls. <strong>Red Lake</strong> (5km further): Submerged forest, hire a rowboat.</p>
+    <div class="warn"><strong>⚠ Long day.</strong> Gorge + Red Lake can be cut if energy runs low.</div>
+  </div>
+</div>
+
+<!-- DAY 17 -->
+<div class="panel" id="d17">
+  <div class="dp-head"><div class="dp-num">17</div><div class="dp-title">Gura Humorului → Putna → Sighet</div></div>
+  <div class="dp-date">Monday 27 July · Check-out by 11:00 · Check-in Sighet 16:00–19:00 ⚠ Leave by 12:00</div>
+  <div class="tags"><span class="tag tag-move">Base Move</span></div>
+  <div class="drive">🚗 ~160 km · ~3h</div>
+  <div class="body">
+    <p><strong>Putna Monastery</strong> (20km from base): Stefan cel Mare's greatest monastery, founded 1466. Allow 45 min.</p>
+    <p>Drive northwest over <strong>Prislop Pass</strong> (1,416m) into Maramureș. Stop at the top for views.</p>
+    <p><strong>Săpânța-Peri Monastery</strong> (15km before Sighet): The tallest wooden church in the world — 75m spire, completed in 2003 in traditional Maramureș style. Extraordinary sight on a hill above the valley. 30 min stop.</p>
+    <p>Arrive Sighet by 16:00 for check-in window.</p>
+  </div>
+</div>
+
+<!-- DAY 18 -->
+<div class="panel" id="d18">
+  <div class="dp-head"><div class="dp-num">18</div><div class="dp-title">Wooden Churches Trail</div></div>
+  <div class="dp-date">Tuesday 28 July · Base: Sighet (Day 1 of 4)</div>
+  <div class="tags"><span class="tag tag-base">Base Day</span></div>
+  <div class="drive">🚗 ~60 km</div>
+  <div class="body">
+    <p>Full UNESCO wooden church circuit — all 6 key churches in one day:</p>
+    <p><strong>Bârsana Monastery</strong> (20km): Most picturesque, active monastery, extraordinary carved wooden gate. <strong>Ieud Hill Church</strong> (15km): Oldest wooden church in Romania, 1364, original frescoes. <strong>Desești + Budești:</strong> Classic Maramureș spire style. <strong>Rozavlea</strong>: Elegant proportions, 18th century. <strong>Șurdești</strong>: One of the tallest historic wooden spires in Maramureș.</p>
+    <p>All built without a single nail, spires up to 50m tall. Allow 20–30 min each. Done by mid-afternoon.</p>
+    <p>Evening: walk Sighet old town.</p>
+  </div>
+</div>
+
+<!-- DAY 19 -->
+<div class="panel" id="d19">
+  <div class="dp-head"><div class="dp-num">19</div><div class="dp-title">Breb Village + Hike Dealul Solovan</div></div>
+  <div class="dp-date">Wednesday 29 July · Base: Sighet (Day 2 of 4)</div>
+  <div class="tags"><span class="tag tag-hike">Hike Day</span></div>
+  <div class="drive">🚗 ~30 km to Breb</div>
+  <div class="body">
+    <p>Drive to <strong>Breb village</strong> (20km). Horse carts, haystacks, old women in traditional dress. Genuinely living 19th-century rural life.</p>
+    <div class="hike-box">
+      <div class="ht">🥾 Dealul Solovan Ridge</div>
+      <div class="hd">Views over the Mara valley. Ask locals for the path — no formal signage.</div>
+      <div class="hike-stats"><span>📍 8 km</span><span>↑ +400m</span><span>⏱ 3h</span><span>● Easy–Moderate</span></div>
+    </div>
+    <p>Return to Sighet for the night.</p>
+  </div>
+</div>
+
+<!-- DAY 20 -->
+<div class="panel" id="d20">
+  <div class="dp-head"><div class="dp-num">20</div><div class="dp-title">Vaser Valley Steam Railway + Merry Cemetery</div></div>
+  <div class="dp-date">Thursday 30 July · Base: Sighet (Day 3 of 4)</div>
+  <div class="tags"><span class="tag tag-base">Base Day</span></div>
+  <div class="drive">🚗 ~60 km + 5–6h on the train</div>
+  <div class="body">
+    <p><strong>Vaser Valley Railway</strong> (Vișeu de Sus, 35km): Working 1932 steam locomotive, 22km into wilderness. Thursday ✅ train runs. Be at station 20–30 min early. <span class="book-badge">Book weeks ahead</span> cffviseu.ro</p>
+    <p><strong>Merry Cemetery, Săpânța</strong> (15km from Vișeu): Hand-carved crosses with humorous epitaphs. Unique on Earth. Allow 1.5h.</p>
+  </div>
+</div>
+
+<!-- DAY 21 -->
+<div class="panel" id="d21">
+  <div class="dp-head"><div class="dp-num">21</div><div class="dp-title">Sighet → Sovata → Cluj/Florești</div></div>
+  <div class="dp-date">Friday 31 July · Check-out Sighet by 12:00 · Check-in Cluj from 14:00</div>
+  <div class="tags"><span class="tag tag-move">Base Move</span></div>
+  <div class="drive">🚗 ~280 km · ~5h with stop</div>
+  <div class="body">
+    <p><strong>Sovata / Lacul Ursu</strong> (~120km): Heliothermal salt lake — cold surface, warmer deeper, effortless floating. Allow 1.5–2h. Bring old swimwear — salt stains.</p>
+    <p>Continue to Cluj/Florești (~120km, fast motorway). Arrive early-mid afternoon.</p>
+  </div>
+</div>
+
+<!-- DAY 22 -->
+<div class="panel" id="d22">
+  <div class="dp-head"><div class="dp-num">22</div><div class="dp-title">Salina Turda + Turda Gorge</div></div>
+  <div class="dp-date">Saturday 1 August · Base: Cluj/Florești (Day 1 of 3)</div>
+  <div class="tags"><span class="tag tag-base">Base Day</span></div>
+  <div class="drive">🚗 ~60 km</div>
+  <div class="body">
+    <p><strong>Salina Turda</strong> (30km): Underground salt mine amusement park, 120m below surface. Ferris wheel, boat on subterranean lake, amphitheatre. Nothing like it in Europe. <span class="book-badge">Book ahead</span> salinaturda.ro. Allow 2–3h.</p>
+    <div class="hike-box">
+      <div class="ht">🥾 Turda Gorge circuit</div>
+      <div class="hd">Afternoon after the mine. Dramatic limestone gorge 5km from Salina. The full circuit goes up over the ridge and back through the gorge floor — ridge section has some exposure which adds excitement.</div>
+      <div class="hike-stats"><span>📍 8 km loop</span><span>↑ +350m</span><span>⏱ 3h</span><span>● Moderate</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- DAY 23 -->
+<div class="panel" id="d23">
+  <div class="dp-head"><div class="dp-num">23</div><div class="dp-title">Hike — Székelykő Ridge above Rimetea</div></div>
+  <div class="dp-date">Sunday 2 August · Base: Cluj/Florești (Day 2 of 3)</div>
+  <div class="tags"><span class="tag tag-hike">Hike Day</span></div>
+  <div class="drive">🚗 ~90 km · ~2h on slow roads</div>
+  <div class="hike-box">
+    <div class="ht">🥾 Székelykő Ridge above Rimetea</div>
+    <div class="hd">Limestone escarpment above a beautifully preserved white Hungarian village. 360° views over the Apuseni landscape.</div>
+    <div class="hike-stats"><span>📍 7–8 km</span><span>↑ +450m</span><span>⏱ 3h</span><span>● Moderate</span></div>
+  </div>
+  <div class="body">
+    <p>Lunch in Rimetea village before heading back.</p>
+    <p><strong>Cheile Aiudului</strong> (Aiud Gorge, 15km from Rimetea): Dramatic limestone gorge, completely off the tourist trail. Short walk through the canyon — wild and uncrowded. 1h. Perfectly placed between Rimetea and the motorway back to Cluj.</p>
+  </div>
+</div>
+
+<!-- DAY 24 -->
+<div class="panel" id="d24">
+  <div class="dp-head"><div class="dp-num">24</div><div class="dp-title">Cluj → Oradea → Debrecen</div></div>
+  <div class="dp-date">Monday 3 August · Check-out Cluj by 11:00 · Check-in Debrecen evening</div>
+  <div class="tags"><span class="tag tag-move">Base Move</span></div>
+  <div class="drive">🚗 ~280 km · ~4h with stop</div>
+  <div class="body">
+    <p><strong>Oradea</strong> (130km west): Romania's great Art Nouveau city. Black Eagle Palace, Moon Church, Canonic Row. Allow 1.5–2h.</p>
+    <p>Cross border to Debrecen (~100km). Arrive early evening. Any hotel — purely functional.</p>
+  </div>
+</div>
+
+<!-- DAY 25 -->
+<div class="panel" id="d25">
+  <div class="dp-head"><div class="dp-num">25</div><div class="dp-title">Debrecen → Ljubljana</div></div>
+  <div class="dp-date">Tuesday 4 August</div>
+  <div class="tags"><span class="tag tag-transit">Transit</span></div>
+  <div class="drive">🚗 ~650 km · ~6.5h · All motorway · Leave mid-morning</div>
+  <div class="body"><p>Debrecen → Budapest → Zagreb → Ljubljana. Home by early afternoon.</p></div>
+</div>
+
+</div><!-- content -->
+</div><!-- layout -->
+
+<script>
+// ── MAP DATA ─────────────────────────────────────────────────────────────────
+const BASES = [
+  {lat:45.7579, lng:21.2561, name:'① Boheme Studio', sub:'Timișoara · 11–12 Jul', desc:'Check-in 14:00–23:30 · Check-out by 11:00 · Cancel by 8 Jul · No washing machine · +40 742 106 932'},
+  {lat:45.7654, lng:24.1467, name:'② Julia\'s Residence', sub:'Cisnădie/Sibiu · 12–17 Jul', desc:'Check-in 15:00–00:00 · Check-out 08:00–10:00 · Cancel by 6 Jul · Washing machine ✅ · +40 749 265 299'},
+  {lat:45.6619, lng:25.5826, name:'③ AlbertView', sub:'Brașov · 17–23 Jul', desc:'Check-in 24h flexible · Check-out 24h flexible · Cancel by 15 Jul · Washing machine ✅ · +40 721 555 451'},
+  {lat:47.5542, lng:25.9018, name:'④ Piano Apartament', sub:'Gura Humorului · 23–27 Jul', desc:'Check-in 15:00–22:00 · Check-out 08:00–11:00 · Cancel by 17 Jul · Washing machine ✅ · +40 745 001 298'},
+  {lat:47.9268, lng:23.8751, name:'⑤ Boulevard Apartament', sub:'Sighetu Marmației · 27–31 Jul', desc:'Check-in 16:00–19:00 ⚠ · Check-out by 12:00 · Cancel by 23 Jul · Washing machine ✅ · +40 741 775 715'},
+  {lat:46.7493, lng:23.5283, name:'⑥ Sunny View', sub:'Cluj/Florești · 31 Jul–3 Aug', desc:'Check-in 14:00–23:30 · Check-out by 11:00 · Cancel by 28 Jul · Washing machine ✅ · +40 755 603 712'},
+  // New additions
+  {lat:47.9653, lng:23.6947, name:'Săpânța-Peri Monastery', desc:'Tallest wooden church in the world · 75m spire · built in traditional Maramureș style · extraordinary sight on a hill'},
+  {lat:47.8432, lng:24.0981, name:'Rozavlea Church', desc:'UNESCO wooden church · elegant 18th-century proportions · Maramureș style'},
+  {lat:47.7648, lng:23.9214, name:'Șurdești Church', desc:'UNESCO wooden church · one of the tallest historic wooden spires in Maramureș'},
+  {lat:46.3241, lng:23.7218, name:'Cheile Aiudului', desc:'Dramatic limestone gorge · completely off the tourist trail · wild and uncrowded · 1h walk'},
+  {lat:45.3583, lng:25.5467, name:'Sinaia', desc:'Mountain resort town · pleasant for lunch after Peleș · monastery worth a quick look'},
+  {lat:45.3615, lng:25.5481, name:'Sinaia Monastery', desc:'17th century monastery in the centre of Sinaia · worth 30 min after Peleș Castle'},
+];
+
+const SIGHTS = [
+  // Timișoara
+  {lat:45.7494, lng:21.2300, name:'Piața Victoriei', desc:'Where the 1989 revolution began · bullet holes still visible'},
+  {lat:45.7511, lng:21.2263, name:'Piața Unirii', desc:'Baroque square with Catholic + Serbian Orthodox cathedrals facing each other'},
+  {lat:45.7198, lng:21.2285, name:'Fabric District', desc:'Timișoara Art Nouveau quarter'},
+  // En route
+  {lat:45.7198, lng:22.8876, name:'Corvin Castle', desc:'Most dramatic Gothic-Renaissance castle in Romania · real drawbridge'},
+  {lat:46.0705, lng:23.5689, name:'Alba Iulia Fortress', desc:'Vauban star-shaped fortress · coronation cathedral · car-free interior'},
+  // Sibiu region
+  {lat:45.7921, lng:24.1514, name:'ASTRA Museum', desc:'Europe\'s largest open-air museum · 96ha · 300+ original rural structures'},
+  {lat:45.7983, lng:24.1514, name:'Sibiu Old Town', desc:'"Eyes of Sibiu" dormer windows · Large + Small Squares · Bridge of Lies'},
+  {lat:46.2189, lng:24.7948, name:'Sighișoara', desc:'Only continuously inhabited medieval citadel in Europe (UNESCO) · arrive before 9am'},
+  {lat:46.0722, lng:24.5182, name:'Biertan', desc:'Most impressive fortified Saxon church in Romania (UNESCO)'},
+  {lat:45.6028, lng:24.6361, name:'Transfăgărășan Road', desc:'Top Gear\'s best road in the world · 2,042m pass · 90 hairpin bends'},
+  {lat:45.5980, lng:24.6175, name:'Bâlea Lake', desc:'Glacial lake at 2,034m · cable car · panoramic Carpathian views'},
+  {lat:45.3617, lng:24.6386, name:'Poenari Fortress', desc:'Real Dracula\'s castle built by Vlad the Impaler · 1,480 steps'},
+  {lat:45.3582, lng:25.5539, name:'Peleș Castle', desc:'Most ornate royal palace in Romania · 160 rooms · Open Wed from 10am · Book ahead: peles.ro'},
+  {lat:45.5272, lng:25.4605, name:'Râșnov Fortress', desc:'Kid-friendly hilltop fortress · great views'},
+  {lat:45.5148, lng:25.3673, name:'Bran Castle', desc:'"Dracula Castle" · dramatic cliff-top setting'},
+  // Transalpina
+  {lat:45.3648, lng:23.6892, name:'Transalpina Road', desc:'Romania\'s highest road · 2,145m · less crowded than Transfăgărășan'},
+  // Brașov
+  {lat:45.6431, lng:25.5882, name:'Brașov Old Town', desc:'Black Church (largest Gothic in SE Europe) · Piața Sfatului · Tampa Hill cable car'},
+  {lat:45.5954, lng:25.5432, name:'Poiana Brașov', desc:'Ski resort · Postăvaru hike trailhead · 12km from Brașov'},
+  {lat:45.5581, lng:25.3489, name:'Zărnești', desc:'Libearty Bear Sanctuary (75+ rescued bears · 70ha) + Gorge hike trailhead · Book: millions.ro/bears'},
+  // Viscri area
+  {lat:46.0681, lng:25.5533, name:'Viscri', desc:'Most celebrated Saxon village in Transylvania (UNESCO) · arrive before 9am'},
+  {lat:45.7182, lng:25.7029, name:'Prejmer', desc:'Best-preserved fortified church in SE Europe · 272-cell honeycomb interior (UNESCO)'},
+  // Bucovina
+  {lat:47.5117, lng:25.8688, name:'Voroneț Monastery', desc:'"Voroneț blue" never replicated in 500 years · Sistine Chapel of the East · Last Judgement on west wall'},
+  {lat:47.5343, lng:25.9455, name:'Humor Monastery', desc:'Warm reddish-brown tones · excellent preservation'},
+  {lat:47.6648, lng:25.5309, name:'Moldovița Monastery', desc:'Large fortified enclosure · Siege of Constantinople fresco'},
+  {lat:47.7752, lng:25.7138, name:'Sucevița Monastery', desc:'Best preserved of all · Tree of Jesse fresco · most fortress-like'},
+  {lat:47.6247, lng:25.9158, name:'Arbore Monastery', desc:'Smallest and most intimate · remarkable green tones'},
+  {lat:47.6488, lng:26.2519, name:'Suceava Fortress', desc:'Ruined citadel of Moldavian princes on a hill · good for kids to climb'},
+  {lat:47.6220, lng:26.1780, name:'Ciocănești Village', desc:'Elaborately painted house façades · unique folk tradition'},
+  {lat:47.8752, lng:25.5970, name:'Putna Monastery', desc:'Stefan cel Mare\'s greatest monastery · founded 1466 · he is buried here'},
+  {lat:46.8320, lng:25.8238, name:'Bicaz Gorge', desc:'8km canyon · walls 300m straight up · "Neck of Hell" · drive slowly'},
+  {lat:46.7895, lng:25.8641, name:'Red Lake', desc:'Eerie submerged forest · dead tree trunks still standing · hire a rowboat'},
+  // Maramureș
+  {lat:47.9275, lng:23.8886, name:'Sighetu Marmației', desc:'Main town of Maramureș · base for the region'},
+  {lat:47.7538, lng:23.6763, name:'Breb Village', desc:'Genuinely living 19th-century rural life · horse carts · not performed for tourists'},
+  {lat:47.8001, lng:24.0463, name:'Bârsana Monastery', desc:'Most picturesque wooden church in Maramureș · extraordinary carved wooden gate'},
+  {lat:47.7931, lng:24.1612, name:'Ieud Hill Church', desc:'Oldest wooden church in Romania · 1364 · original frescoes (UNESCO)'},
+  {lat:47.7682, lng:23.8461, name:'Desești Church', desc:'Classic Maramureș spire style · UNESCO wooden church'},
+  {lat:47.7248, lng:23.8261, name:'Budești Church', desc:'Classic Maramureș spire style · UNESCO wooden church'},
+  {lat:47.7129, lng:24.4382, name:'Vișeu de Sus', desc:'Vaser Valley Steam Railway departs here · 1932 steam locomotive · Book weeks ahead: cffviseu.ro'},
+  {lat:47.9728, lng:23.6981, name:'Merry Cemetery Săpânța', desc:'Unique on Earth · hand-carved oak crosses with humorous painted epitaphs · allow 1.5h'},
+  // Cluj + Apuseni
+  {lat:46.5608, lng:23.7858, name:'Salina Turda', desc:'Underground salt mine amusement park 120m below surface · Ferris wheel · subterranean lake · Book: salinaturda.ro'},
+  {lat:46.5583, lng:23.6751, name:'Turda Gorge', desc:'Optional add-on to Salina Turda day · gorge floor walk 1h or full circuit 3h'},
+  {lat:46.4518, lng:23.5489, name:'Rimetea Village', desc:'Beautifully preserved white Hungarian village · Székelykő limestone ridge above it'},
+  {lat:47.0461, lng:21.9183, name:'Oradea', desc:'Romania\'s great Art Nouveau city · Black Eagle Palace · Moon Church · Canonic Row'},
+  {lat:46.5832, lng:25.0746, name:'Sovata / Lacul Ursu', desc:'Heliothermal salt lake · cold surface warmer deeper · effortless floating · bring old swimwear'},
+  // Prislop Pass
+  {lat:47.6894, lng:24.9756, name:'Prislop Pass', desc:'1,416m · scenic mountain road connecting Maramureș to Bucovina · stop at top for views'},
+];
+
+const HIKES = [
+  {lat:45.5227, lng:23.9283, name:'Cindrel–Ștefanu Trailhead', desc:'Păltiniș resort · Cindrel 2,244m → Ștefanu 2,242m ridge circuit · 16km · +900m · 6h · Moderate'},
+  {lat:45.5954, lng:25.5432, name:'Postăvaru–Cristianu Circuit Trailhead', desc:'Poiana Brașov · Postăvaru 1,799m → Cristianu Mare circuit · 14km · +700m · 5h · Moderate'},
+  {lat:45.5242, lng:25.3014, name:'Zărnești Gorge + Ridge Trailhead', desc:'Piatra Craiului NP · Gorge + ridge approach · 16km · +600m · 5.5h · Moderate'},
+  {lat:47.5270, lng:25.5621, name:'Rarău Trailhead', desc:'Câmpulung Moldovenesc area · 1,651m · 8km · +500m · 3h · Moderate'},
+  {lat:47.7538, lng:23.6763, name:'Dealul Solovan Trailhead', desc:'Above Breb village · 8km · +400m · 3h · Easy–Moderate · Ask locals for path'},
+  {lat:46.4518, lng:23.5489, name:'Székelykő Trailhead', desc:'Above Rimetea village · 7–8km · +450m · 3h · Moderate'},
+  {lat:46.5583, lng:23.6751, name:'Turda Gorge Trailhead', desc:'Optional add-on to Salina Turda · 8km loop · +350m · 3h · Moderate'},
+];
+
+// ── VIEW BOUNDS ──────────────────────────────────────────────────────────────
+const VIEWS = {
+  all:       [[44.0,19.5],[48.8,27.5]],
+  sibiu:     [[45.2,23.2],[46.6,25.4]],
+  brasov:    [[45.1,24.6],[46.5,26.4]],
+  bucovina:  [[47.0,25.0],[48.3,26.8]],
+  maramures: [[47.4,23.0],[48.3,25.2]],
+  cluj:      [[46.0,21.5],[47.4,24.6]],
+};
+
+// ── LEAFLET ──────────────────────────────────────────────────────────────────
+let map, markersLayer;
+
+function initMap() {
+  if (map) return;
+  map = L.map('map', {zoomControl:true});
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution:'© <a href="https://openstreetmap.org">OpenStreetMap</a>',
+    maxZoom:18
+  }).addTo(map);
+  markersLayer = L.layerGroup().addTo(map);
+}
+
+function makeIcon(color, size) {
+  return L.divIcon({
+    className:'',
+    html:`<svg width="${size}" height="${size*1.4}" viewBox="0 0 24 33" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 0C5.4 0 0 5.4 0 12c0 7.2 12 21 12 21S24 19.2 24 12C24 5.4 18.6 0 12 0z" fill="${color}" stroke="rgba(0,0,0,0.35)" stroke-width="1.5"/>
+      <circle cx="12" cy="12" r="5" fill="rgba(255,255,255,0.9)"/>
+    </svg>`,
+    iconSize:[size,size*1.4],
+    iconAnchor:[size/2,size*1.4],
+    popupAnchor:[0,-size*1.3]
+  });
+}
+
+function renderMarkers(view) {
+  markersLayer.clearLayers();
+  const b = VIEWS[view];
+  const inB = (lat,lng) => view==='all' || (lat>=b[0][0]&&lat<=b[1][0]&&lng>=b[0][1]&&lng<=b[1][1]);
+
+  BASES.forEach(p => {
+    if (!inB(p.lat,p.lng)) return;
+    L.marker([p.lat,p.lng],{icon:makeIcon('#c9933a',28),zIndexOffset:1000})
+      .bindPopup(`<div class="popup-name">${p.name}</div><div class="popup-type popup-base">${p.sub}</div><div class="popup-desc">${p.desc}</div>`)
+      .addTo(markersLayer);
+  });
+  SIGHTS.forEach(p => {
+    if (!inB(p.lat,p.lng)) return;
+    L.marker([p.lat,p.lng],{icon:makeIcon('#4a72a8',20)})
+      .bindPopup(`<div class="popup-name">${p.name}</div><div class="popup-type popup-sight">Sight</div><div class="popup-desc">${p.desc}</div>`)
+      .addTo(markersLayer);
+  });
+  HIKES.forEach(p => {
+    if (!inB(p.lat,p.lng)) return;
+    L.marker([p.lat,p.lng],{icon:makeIcon('#4a8a5a',20)})
+      .bindPopup(`<div class="popup-name">${p.name}</div><div class="popup-type popup-hike">Hike trailhead</div><div class="popup-desc">${p.desc}</div>`)
+      .addTo(markersLayer);
+  });
+}
+
+function showMap(view) {
+  document.querySelectorAll('.panel,.map-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById('mapPanel').classList.add('active');
+  event.currentTarget.classList.add('active');
+  setTimeout(()=>{
+    initMap();
+    renderMarkers(view);
+    map.fitBounds(VIEWS[view],{padding:[20,20]});
+    map.invalidateSize();
+  },50);
+}
+
+function show(id) {
+  document.querySelectorAll('.panel,.map-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.sb-item').forEach(i=>i.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.currentTarget.classList.add('active');
+}
+</script>
+
+
+</body></html>
