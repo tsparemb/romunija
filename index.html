@@ -1,24 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
+<!-- saved from url=(0058)file:///C:/Users/Tine/Downloads/north_romania_2026_v9.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>North Romania 2026</title>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="leaflet.css"/>
-<script src="leaflet.js"></script>
+<link href="./index_files/css2" rel="stylesheet">
+<link rel="stylesheet" href="file:///C:/Users/Tine/Downloads/leaflet.css">
+<script src="file:///C:/Users/Tine/Downloads/leaflet.js"></script>
 <style>
 :root{
   --bg:#f9f9fb;--surface:#ffffff;--card:#ffffff;--border:#dcdde8;
   --border-light:#ebebf2;--text:#14142a;--muted:#585870;--faint:#9898b0;
-  --gold:#b8960a;--gold-dim:#FCD116;--red:#CE1126;--red-dim:#fde8eb;
+  --gold:#d4a800;--gold-dim:#FCD116;--red:#CE1126;--red-dim:#fde8eb;
   --green-dim:#e8eaf8;--blue:#002B7F;--blue-dim:#e8eaf8;
 }
 *{margin:0;padding:0;box-sizing:border-box;}html{scroll-behavior:smooth;}
 body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;}
 .hero{padding:36px 48px 28px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:24px;background:#ffffff;}
 .hero h1{font-family:'Cormorant Garamond',serif;font-size:48px;font-weight:600;line-height:0.95;}
-.hero h1 em{font-style:italic;color:#b8960a;}
+.hero h1 em{font-style:italic;color:#CE1126;}
 .hero p{font-size:12px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:10px;}
 .hero-stats{display:flex;border:1px solid var(--border);}
 .hs{padding:10px 16px;border-right:1px solid var(--border);}
@@ -136,69 +136,70 @@ td strong{color:var(--text);}
     <div class="hs"><span class="hs-l">km</span><span class="hs-v">~5,100</span></div>
   </div>
 </div>
+<div style="display:flex;height:6px;"><div style="flex:1;background:#002B7F;"></div><div style="flex:1;background:#FCD116;"></div><div style="flex:1;background:#CE1126;"></div></div>
 <div class="route-bar">Ljubljana <b>→</b> Timișoara <b>→</b> Sibiu/Cisnădie <b>→</b> Brașov <b>→</b> Gura Humorului <b>→</b> Sighetu Marmației <b>→</b> Cluj/Florești <b>→</b> Debrecen <b>→</b> Ljubljana</div>
 
 <div class="layout">
 <div class="sidebar">
   <div class="sb-section">
     <div class="sb-head">Overview</div>
-    <div class="sb-item active" onclick="show('overview')"><span class="sb-day">Bases &amp; Bookings</span></div>
-    <div class="sb-item" onclick="show('driving')"><span class="sb-day">Driving Summary</span></div>
-    <div class="sb-item" onclick="showMap('all')"><span class="sb-day">🗺 Map — All</span></div>
-    <div class="sb-item" onclick="showMap('sibiu')"><span class="sb-day">🗺 Sibiu region</span></div>
-    <div class="sb-item" onclick="showMap('brasov')"><span class="sb-day">🗺 Brașov region</span></div>
-    <div class="sb-item" onclick="showMap('bucovina')"><span class="sb-day">🗺 Bucovina</span></div>
-    <div class="sb-item" onclick="showMap('maramures')"><span class="sb-day">🗺 Maramureș</span></div>
-    <div class="sb-item" onclick="showMap('cluj')"><span class="sb-day">🗺 Cluj region</span></div>
+    <div class="sb-item active" onclick="show(&#39;overview&#39;)"><span class="sb-day">Bases &amp; Bookings</span></div>
+    <div class="sb-item" onclick="show(&#39;driving&#39;)"><span class="sb-day">Driving Summary</span></div>
+    <div class="sb-item" onclick="showMap(&#39;all&#39;)"><span class="sb-day">🗺 Map — All</span></div>
+    <div class="sb-item" onclick="showMap(&#39;sibiu&#39;)"><span class="sb-day">🗺 Sibiu region</span></div>
+    <div class="sb-item" onclick="showMap(&#39;brasov&#39;)"><span class="sb-day">🗺 Brașov region</span></div>
+    <div class="sb-item" onclick="showMap(&#39;bucovina&#39;)"><span class="sb-day">🗺 Bucovina</span></div>
+    <div class="sb-item" onclick="showMap(&#39;maramures&#39;)"><span class="sb-day">🗺 Maramureș</span></div>
+    <div class="sb-item" onclick="showMap(&#39;cluj&#39;)"><span class="sb-day">🗺 Cluj region</span></div>
   </div>
   <div class="sb-section">
     <div class="sb-head">Transit In</div>
-    <div class="sb-item" onclick="show('d1')"><span class="sb-day">Day 1</span><div style="text-align:right"><div class="sb-date">Sat 11 Jul</div><span class="sb-tag t-transit">Transit</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d1&#39;)"><span class="sb-day">Day 1</span><div style="text-align:right"><div class="sb-date">Sat 11 Jul</div><span class="sb-tag t-transit">Transit</span></div></div>
   </div>
   <div class="sb-section">
     <div class="sb-head">① Timișoara · 1 night</div>
-    <div class="sb-item" onclick="show('d2')"><span class="sb-day">Day 2</span><div style="text-align:right"><div class="sb-date">Sun 12 Jul</div><span class="sb-tag t-move">Move → Sibiu</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d2&#39;)"><span class="sb-day">Day 2</span><div style="text-align:right"><div class="sb-date">Sun 12 Jul</div><span class="sb-tag t-move">Move → Sibiu</span></div></div>
   </div>
   <div class="sb-section">
     <div class="sb-head">② Sibiu/Cisnădie · 5 nights</div>
-    <div class="sb-item" onclick="show('d3')"><span class="sb-day">Day 3</span><div style="text-align:right"><div class="sb-date">Mon 13 Jul</div><span class="sb-tag t-base">ASTRA + Old Town</span></div></div>
-    <div class="sb-item" onclick="show('d4')"><span class="sb-day">Day 4</span><div style="text-align:right"><div class="sb-date">Tue 14 Jul</div><span class="sb-tag t-base">Sighișoara + Biertan</span></div></div>
-    <div class="sb-item" onclick="show('d5')"><span class="sb-day">Day 5</span><div style="text-align:right"><div class="sb-date">Wed 15 Jul</div><span class="sb-tag t-hike">Hike Cindrel</span></div></div>
-    <div class="sb-item" onclick="show('d6')"><span class="sb-day">Day 6</span><div style="text-align:right"><div class="sb-date">Thu 16 Jul</div><span class="sb-tag t-base">Transfăgărășan</span></div></div>
-    <div class="sb-item" onclick="show('d7')"><span class="sb-day">Day 7</span><div style="text-align:right"><div class="sb-date">Fri 17 Jul</div><span class="sb-tag t-move">Move → Brașov</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d3&#39;)"><span class="sb-day">Day 3</span><div style="text-align:right"><div class="sb-date">Mon 13 Jul</div><span class="sb-tag t-base">ASTRA + Old Town</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d4&#39;)"><span class="sb-day">Day 4</span><div style="text-align:right"><div class="sb-date">Tue 14 Jul</div><span class="sb-tag t-base">Sighișoara + Biertan</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d5&#39;)"><span class="sb-day">Day 5</span><div style="text-align:right"><div class="sb-date">Wed 15 Jul</div><span class="sb-tag t-hike">Hike Cindrel</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d6&#39;)"><span class="sb-day">Day 6</span><div style="text-align:right"><div class="sb-date">Thu 16 Jul</div><span class="sb-tag t-base">Transfăgărășan</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d7&#39;)"><span class="sb-day">Day 7</span><div style="text-align:right"><div class="sb-date">Fri 17 Jul</div><span class="sb-tag t-move">Move → Brașov</span></div></div>
   </div>
   <div class="sb-section">
     <div class="sb-head">③ Brașov · 6 nights</div>
-    <div class="sb-item" onclick="show('d8')"><span class="sb-day">Day 8</span><div style="text-align:right"><div class="sb-date">Sat 18 Jul</div><span class="sb-tag t-base">Rest + Explore</span></div></div>
-    <div class="sb-item" onclick="show('d9')"><span class="sb-day">Day 9</span><div style="text-align:right"><div class="sb-date">Sun 19 Jul</div><span class="sb-tag t-hike">Hike Postăvaru</span></div></div>
-    <div class="sb-item" onclick="show('d10')"><span class="sb-day">Day 10</span><div style="text-align:right"><div class="sb-date">Mon 20 Jul</div><span class="sb-tag t-base">Bears + Bran</span></div></div>
-    <div class="sb-item" onclick="show('d11')"><span class="sb-day">Day 11</span><div style="text-align:right"><div class="sb-date">Tue 21 Jul</div><span class="sb-tag t-hike">Hike Zărnești</span></div></div>
-    <div class="sb-item" onclick="show('d12')"><span class="sb-day">Day 12</span><div style="text-align:right"><div class="sb-date">Wed 22 Jul</div><span class="sb-tag t-base">Peleș + Râșnov</span></div></div>
-    <div class="sb-item" onclick="show('d13')"><span class="sb-day">Day 13</span><div style="text-align:right"><div class="sb-date">Thu 23 Jul</div><span class="sb-tag t-move">Move → Gura Hum.</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d8&#39;)"><span class="sb-day">Day 8</span><div style="text-align:right"><div class="sb-date">Sat 18 Jul</div><span class="sb-tag t-base">Rest + Explore</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d9&#39;)"><span class="sb-day">Day 9</span><div style="text-align:right"><div class="sb-date">Sun 19 Jul</div><span class="sb-tag t-hike">Hike Postăvaru</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d10&#39;)"><span class="sb-day">Day 10</span><div style="text-align:right"><div class="sb-date">Mon 20 Jul</div><span class="sb-tag t-base">Bears + Bran</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d11&#39;)"><span class="sb-day">Day 11</span><div style="text-align:right"><div class="sb-date">Tue 21 Jul</div><span class="sb-tag t-hike">Hike Zărnești</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d12&#39;)"><span class="sb-day">Day 12</span><div style="text-align:right"><div class="sb-date">Wed 22 Jul</div><span class="sb-tag t-base">Peleș + Râșnov</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d13&#39;)"><span class="sb-day">Day 13</span><div style="text-align:right"><div class="sb-date">Thu 23 Jul</div><span class="sb-tag t-move">Move → Gura Hum.</span></div></div>
   </div>
   <div class="sb-section">
     <div class="sb-head">④ Gura Humorului · 4 nights</div>
-    <div class="sb-item" onclick="show('d14')"><span class="sb-day">Day 14</span><div style="text-align:right"><div class="sb-date">Fri 24 Jul</div><span class="sb-tag t-base">Monasteries 1</span></div></div>
-    <div class="sb-item" onclick="show('d15')"><span class="sb-day">Day 15</span><div style="text-align:right"><div class="sb-date">Sat 25 Jul</div><span class="sb-tag t-base">Monasteries 2</span></div></div>
-    <div class="sb-item" onclick="show('d16')"><span class="sb-day">Day 16</span><div style="text-align:right"><div class="sb-date">Sun 26 Jul</div><span class="sb-tag t-hike">Rarău + Bicaz</span></div></div>
-    <div class="sb-item" onclick="show('d17')"><span class="sb-day">Day 17</span><div style="text-align:right"><div class="sb-date">Mon 27 Jul</div><span class="sb-tag t-move">Move → Sighet</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d14&#39;)"><span class="sb-day">Day 14</span><div style="text-align:right"><div class="sb-date">Fri 24 Jul</div><span class="sb-tag t-base">Monasteries 1</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d15&#39;)"><span class="sb-day">Day 15</span><div style="text-align:right"><div class="sb-date">Sat 25 Jul</div><span class="sb-tag t-base">Monasteries 2</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d16&#39;)"><span class="sb-day">Day 16</span><div style="text-align:right"><div class="sb-date">Sun 26 Jul</div><span class="sb-tag t-hike">Rarău + Bicaz</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d17&#39;)"><span class="sb-day">Day 17</span><div style="text-align:right"><div class="sb-date">Mon 27 Jul</div><span class="sb-tag t-move">Move → Sighet</span></div></div>
   </div>
   <div class="sb-section">
     <div class="sb-head">⑤ Sighet · 4 nights</div>
-    <div class="sb-item" onclick="show('d18')"><span class="sb-day">Day 18</span><div style="text-align:right"><div class="sb-date">Tue 28 Jul</div><span class="sb-tag t-base">Wooden Churches</span></div></div>
-    <div class="sb-item" onclick="show('d19')"><span class="sb-day">Day 19</span><div style="text-align:right"><div class="sb-date">Wed 29 Jul</div><span class="sb-tag t-hike">Breb + Hike</span></div></div>
-    <div class="sb-item" onclick="show('d20')"><span class="sb-day">Day 20</span><div style="text-align:right"><div class="sb-date">Thu 30 Jul</div><span class="sb-tag t-base">Steam Train + Cemetery</span></div></div>
-    <div class="sb-item" onclick="show('d21')"><span class="sb-day">Day 21</span><div style="text-align:right"><div class="sb-date">Fri 31 Jul</div><span class="sb-tag t-move">Move → Cluj</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d18&#39;)"><span class="sb-day">Day 18</span><div style="text-align:right"><div class="sb-date">Tue 28 Jul</div><span class="sb-tag t-base">Wooden Churches</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d19&#39;)"><span class="sb-day">Day 19</span><div style="text-align:right"><div class="sb-date">Wed 29 Jul</div><span class="sb-tag t-hike">Breb + Hike</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d20&#39;)"><span class="sb-day">Day 20</span><div style="text-align:right"><div class="sb-date">Thu 30 Jul</div><span class="sb-tag t-base">Steam Train + Cemetery</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d21&#39;)"><span class="sb-day">Day 21</span><div style="text-align:right"><div class="sb-date">Fri 31 Jul</div><span class="sb-tag t-move">Move → Cluj</span></div></div>
   </div>
   <div class="sb-section">
     <div class="sb-head">⑥ Cluj/Florești · 3 nights</div>
-    <div class="sb-item" onclick="show('d22')"><span class="sb-day">Day 22</span><div style="text-align:right"><div class="sb-date">Sat 1 Aug</div><span class="sb-tag t-base">Salina Turda</span></div></div>
-    <div class="sb-item" onclick="show('d23')"><span class="sb-day">Day 23</span><div style="text-align:right"><div class="sb-date">Sun 2 Aug</div><span class="sb-tag t-hike">Hike Rimetea</span></div></div>
-    <div class="sb-item" onclick="show('d24')"><span class="sb-day">Day 24</span><div style="text-align:right"><div class="sb-date">Mon 3 Aug</div><span class="sb-tag t-move">Move → Debrecen</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d22&#39;)"><span class="sb-day">Day 22</span><div style="text-align:right"><div class="sb-date">Sat 1 Aug</div><span class="sb-tag t-base">Salina Turda</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d23&#39;)"><span class="sb-day">Day 23</span><div style="text-align:right"><div class="sb-date">Sun 2 Aug</div><span class="sb-tag t-hike">Hike Rimetea</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d24&#39;)"><span class="sb-day">Day 24</span><div style="text-align:right"><div class="sb-date">Mon 3 Aug</div><span class="sb-tag t-move">Move → Debrecen</span></div></div>
   </div>
   <div class="sb-section">
     <div class="sb-head">Transit Home</div>
-    <div class="sb-item" onclick="show('d25')"><span class="sb-day">Day 25</span><div style="text-align:right"><div class="sb-date">Tue 4 Aug</div><span class="sb-tag t-transit">→ Ljubljana</span></div></div>
+    <div class="sb-item" onclick="show(&#39;d25&#39;)"><span class="sb-day">Day 25</span><div style="text-align:right"><div class="sb-date">Tue 4 Aug</div><span class="sb-tag t-transit">→ Ljubljana</span></div></div>
   </div>
 </div>
 
@@ -207,12 +208,12 @@ td strong{color:var(--text);}
 <!-- MAP -->
 <div class="map-panel" id="mapPanel">
   <div style="display:flex;border-bottom:1px solid var(--border);background:var(--surface);flex-shrink:0;overflow-x:auto;scrollbar-width:none;">
-    <div class="map-tab active" onclick="showMap('all')">All</div>
-    <div class="map-tab" onclick="showMap('sibiu')">Sibiu</div>
-    <div class="map-tab" onclick="showMap('brasov')">Brașov</div>
-    <div class="map-tab" onclick="showMap('bucovina')">Bucovina</div>
-    <div class="map-tab" onclick="showMap('maramures')">Maramureș</div>
-    <div class="map-tab" onclick="showMap('cluj')">Cluj</div>
+    <div class="map-tab active" onclick="showMap(&#39;all&#39;)">All</div>
+    <div class="map-tab" onclick="showMap(&#39;sibiu&#39;)">Sibiu</div>
+    <div class="map-tab" onclick="showMap(&#39;brasov&#39;)">Brașov</div>
+    <div class="map-tab" onclick="showMap(&#39;bucovina&#39;)">Bucovina</div>
+    <div class="map-tab" onclick="showMap(&#39;maramures&#39;)">Maramureș</div>
+    <div class="map-tab" onclick="showMap(&#39;cluj&#39;)">Cluj</div>
   </div>
   <div id="map" style="flex:1;min-height:400px;z-index:1;position:relative;">
     <div style="position:absolute;bottom:28px;right:10px;z-index:1000;background:rgba(255,255,255,0.95);border:1px solid #dcdde8;padding:10px 14px;box-shadow:0 2px 8px rgba(0,0,0,0.1);">
@@ -238,7 +239,7 @@ td strong{color:var(--text);}
       <div class="ov-row"><span class="ov-row-label">Cancel by</span>8 Jul</div>
       <div class="ov-row"><span class="ov-row-label">Washing</span>❌ no washing machine</div>
       <div class="ov-row"><span class="ov-row-label">Phone</span>+40 742 106 932</div>
-      <a class="ov-link" href="https://www.booking.com/hotel/ro/boheme-timisoara.en-gb.html" target="_blank" target="_blank" target="_blank">Booking.com →</a>
+      <a class="ov-link" href="https://www.booking.com/hotel/ro/boheme-timisoara.en-gb.html" target="_blank">Booking.com →</a>
     </div>
 
     <div class="ov-card">
@@ -250,7 +251,7 @@ td strong{color:var(--text);}
       <div class="ov-row"><span class="ov-row-label">Cancel by</span>6 Jul</div>
       <div class="ov-row"><span class="ov-row-label">Washing</span>✅ washing machine</div>
       <div class="ov-row"><span class="ov-row-label">Phone</span>+40 749 265 299</div>
-      <a class="ov-link" href="https://www.booking.com/hotel/ro/apartament-2-camere-terasa-40mp.en-gb.html" target="_blank" target="_blank" target="_blank">Booking.com →</a>
+      <a class="ov-link" href="https://www.booking.com/hotel/ro/apartament-2-camere-terasa-40mp.en-gb.html" target="_blank">Booking.com →</a>
     </div>
 
     <div class="ov-card">
@@ -262,7 +263,7 @@ td strong{color:var(--text);}
       <div class="ov-row"><span class="ov-row-label">Cancel by</span>15 Jul</div>
       <div class="ov-row"><span class="ov-row-label">Washing</span>✅ washing machine</div>
       <div class="ov-row"><span class="ov-row-label">Phone</span>+40 721 555 451</div>
-      <a class="ov-link" href="https://www.booking.com/hotel/ro/albertview-brasov.en-gb.html" target="_blank" target="_blank" target="_blank">Booking.com →</a>
+      <a class="ov-link" href="https://www.booking.com/hotel/ro/albertview-brasov.en-gb.html" target="_blank">Booking.com →</a>
     </div>
 
     <div class="ov-card">
@@ -274,7 +275,7 @@ td strong{color:var(--text);}
       <div class="ov-row"><span class="ov-row-label">Cancel by</span>17 Jul</div>
       <div class="ov-row"><span class="ov-row-label">Washing</span>✅ washing machine</div>
       <div class="ov-row"><span class="ov-row-label">Phone</span>+40 745 001 298</div>
-      <a class="ov-link" href="https://www.booking.com/hotel/ro/piano-apartament-gura-humorului.en-gb.html" target="_blank" target="_blank" target="_blank">Booking.com →</a>
+      <a class="ov-link" href="https://www.booking.com/hotel/ro/piano-apartament-gura-humorului.en-gb.html" target="_blank">Booking.com →</a>
     </div>
 
     <div class="ov-card">
@@ -286,7 +287,7 @@ td strong{color:var(--text);}
       <div class="ov-row"><span class="ov-row-label">Cancel by</span>23 Jul</div>
       <div class="ov-row"><span class="ov-row-label">Washing</span>✅ washing machine</div>
       <div class="ov-row"><span class="ov-row-label">Phone</span>+40 741 775 715</div>
-      <a class="ov-link" href="https://www.booking.com/hotel/ro/modern-apartment-pe-bulevard.en-gb.html" target="_blank" target="_blank" target="_blank">Booking.com →</a>
+      <a class="ov-link" href="https://www.booking.com/hotel/ro/modern-apartment-pe-bulevard.en-gb.html" target="_blank">Booking.com →</a>
     </div>
 
     <div class="ov-card">
@@ -298,7 +299,7 @@ td strong{color:var(--text);}
       <div class="ov-row"><span class="ov-row-label">Cancel by</span>28 Jul</div>
       <div class="ov-row"><span class="ov-row-label">Washing</span>✅ washing machine</div>
       <div class="ov-row"><span class="ov-row-label">Phone</span>+40 755 603 712</div>
-      <a class="ov-link" href="https://www.booking.com/hotel/ro/cozy-sofi.en-gb.html" target="_blank" target="_blank" target="_blank">Booking.com →</a>
+      <a class="ov-link" href="https://www.booking.com/hotel/ro/cozy-sofi.en-gb.html" target="_blank">Booking.com →</a>
     </div>
 
   </div>
@@ -801,5 +802,6 @@ function show(id) {
   event.currentTarget.classList.add('active');
 }
 </script>
-</body>
-</html>
+
+
+</body></html>
